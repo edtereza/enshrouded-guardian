@@ -296,7 +296,14 @@ The optional `scripts/build-shroudtopia.cmd` runs these commands in an MSVC deve
 
 Changing an embedded template requires recompiling the DLL. The server does not need a separate copy of `save-viewer.html`.
 
-Startup migration handles supported legacy storage names and schemas. Original structured files and historical logs are archived instead of being rewritten as purported translations. Conflicting destinations stop activation to avoid overwriting saves.
+Startup migration handles supported legacy storage names and schemas. Original structured files and historical logs are archived instead of being rewritten as purported translations. Conflicting save-data destinations stop activation to avoid overwriting saves.
+If both guardian.json and guardiao.json exist, configuration objects merge
+recursively: values in the file with the older last-modified timestamp win,
+while missing fields come from the other file. Equal timestamps prefer
+guardiao.json. Lists are kept whole, not combined. Legacy keys are normalized
+before merging. Both originals are backed up under guardian/legacy-backup/config/merge-<n>/;
+only guardian.json remains active. Invalid JSON or non-object roots abort the
+configuration migration without changing either original file.
 
 For an offline migration and HTML regeneration, with the server stopped:
 

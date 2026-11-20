@@ -41,22 +41,47 @@ function write(file, value) {
   fs.renameSync(file + '.tmp', file);
 }
 
+function readConfig(file) {
+  const value = convert(JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '')));
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Configuration must be a JSON object');
+  if (value.whitelist && typeof value.whitelist === 'object' && !Array.isArray(value.whitelist)) {
+    if (Object.hasOwn(value.whitelist, 'steamIds')) {
+      if (!Object.hasOwn(value.whitelist, 'players')) value.whitelist.players = value.whitelist.steamIds;
+      delete value.whitelist.steamIds;
+    }
+  }
+  return value;
+}
+
+function mergeConfig(newer, older) {
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  if (!object(newer) || !object(older)) return older;
+  const result = { ...newer };
+  for (const [key, value] of Object.entries(older)) {
+    Object.defineProperty(result, key, { value: Object.hasOwn(newer, key) ? mergeConfig(newer[key], value) : value,
+      enumerable: true, configurable: true, writable: true });
+  }
+  return result;
+}
+
 function migrate(root) {
   root = path.resolve(root);
   const data = path.join(root, 'guardian');
   if (!fs.statSync(data).isDirectory()) throw new Error('Expected guardian directory');
   const oldConfig = path.join(root, 'guardiao.json');
   const newConfig = path.join(root, 'guardian.json');
-  const config = convert(JSON.parse(fs.readFileSync(fs.existsSync(newConfig) ? newConfig : oldConfig, 'utf8')));
-  if (fs.existsSync(newConfig) && fs.existsSync(oldConfig) &&
-      JSON.stringify(convert(JSON.parse(fs.readFileSync(oldConfig, 'utf8')))) !== JSON.stringify(config)) {
-    throw new Error('Conflicting legacy and current configuration');
+  const hasNew = fs.existsSync(newConfig), hasOld = fs.existsSync(oldConfig);
+  let config = readConfig(hasNew ? newConfig : oldConfig);
+  if (hasNew && hasOld) {
+    const old = readConfig(oldConfig);
+    const legacyOlder = fs.statSync(oldConfig, { bigint: true }).mtimeNs <= fs.statSync(newConfig, { bigint: true }).mtimeNs;
+    config = legacyOlder ? mergeConfig(config, old) : mergeConfig(old, config);
   }
   const backup = path.join(root, 'guardian-legacy-backup-' + new Date().toISOString().replace(/[:.]/g, '-'));
   fs.cpSync(data, backup, { recursive: true, errorOnExist: true, force: false });
   for (const name of ['guardiao.json', 'guardian.json', 'shroudtopia.json']) {
     const file = path.join(root, name);
-    if (fs.existsSync(file)) fs.copyFileSync(file, path.join(backup, renamed(name) + '.original'));
+    if (fs.existsSync(file)) fs.copyFileSync(file, path.join(backup, name + '.original'));
   }
   write(newConfig, config);
   if (fs.existsSync(oldConfig)) fs.renameSync(oldConfig, path.join(backup, 'legacy-config.original'));
@@ -119,7 +144,7 @@ function migrate(root) {
   return backup;
 }
 
-module.exports = { migrate, convert };
+module.exports = { migrate, convert, mergeConfig };
 if (require.main === module) {
   if (!process.argv[2]) throw new Error('Usage: node scripts/migrate-storage.cjs SERVER_DIRECTORY');
   console.log('Original files preserved at:', migrate(process.argv[2]));

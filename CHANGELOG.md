@@ -2,6 +2,12 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 3.0.9 — 2026-11-20
+
+- Resolve guardian.json/guardiao.json coexistence by recursively merging normalized configuration keys. Older last-modified values win (legacy file wins ties); arrays remain whole.
+- Back up both originals separately before replacing guardian.json and retiring guardiao.json. Existing runtime migration backups are not overwritten. Accept UTF-8 BOMs; malformed JSON/non-object roots leave both originals unchanged.
+- Offline migration follows the same precedence and no longer overwrites one config backup with the other. Local automated validation: 26 Rust tests and 4 Node tests passed, including precedence, aliases, backups, idempotence and invalid inputs. No in-game test.
+
 ## 3.0.8 — 2026-11-20
 
 - GitHub builds/releases provide guardian-{version}.zip (Guardian/Shroudtopia only) and guardian-{version}-full.zip (also includes app-local Visual C++ x64 runtime and notice).

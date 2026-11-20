@@ -2,6 +2,12 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 3.0.9 — 20/11/2026
+
+- Conflito guardian.json/guardiao.json resolvido por merge recursivo de chaves normalizadas. Valores do arquivo com última modificação mais antiga prevalecem (legado vence empate); listas ficam inteiras.
+- Ambos os originais preservados separadamente antes de atualizar guardian.json e remover guardiao.json da pasta ativa. Backups anteriores da migração no mod não são sobrescritos. BOM UTF-8 aceito; JSON inválido/raiz não objeto mantém os originais intactos.
+- Helper offline aplica as mesmas regras e não sobrescreve um backup de configuração com o outro. Validação automatizada local: 26 testes Rust e 4 testes Node passaram, cobrindo precedência, aliases, backups, idempotência e entradas inválidas. Sem teste dentro do jogo.
+
 ## 3.0.8 — 20/11/2026
 
 - Build e Releases disponibilizam guardian-{versão}.zip (somente Guardian/Shroudtopia) e guardian-{versão}-full.zip (inclui runtime Visual C++ x64 local e aviso).

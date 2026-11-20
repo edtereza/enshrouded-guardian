@@ -352,3 +352,15 @@ arquivos/hashes. SHA256SUMS.txt cobre os dois ZIPs e guardian.dll.
 O verificador de atualizações consulta as versões estáveis publicadas em Releases.
 O template HTML incorporado não contém mais um save de jogador de exemplo.
 Os testes automatizados não substituem validação dentro do jogo.
+
+
+### Conflito entre arquivos de configuração
+
+Se guardian.json e guardiao.json existirem juntos, os objetos serão mesclados
+recursivamente. O arquivo com a data de última modificação mais antiga tem
+prioridade nos campos repetidos; os campos ausentes vêm do outro arquivo.
+Em empate, guardiao.json prevalece. Listas são preservadas inteiras, sem união.
+Chaves antigas são convertidas antes do merge. Ambos os originais ficam em
+guardian/legacy-backup/config/merge-<n>/ e somente guardian.json permanece ativo.
+JSON inválido ou raiz que não seja objeto interrompe a migração sem alterar os
+dois arquivos de configuração. O helper offline aplica as mesmas regras.
