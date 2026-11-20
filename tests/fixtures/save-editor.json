@@ -1,0 +1,1932 @@
+[
+  {
+    "name": "classic",
+    "A_hex": "5332424802000000090005000000a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a72300000040e2010003000000fd04c10101aa63e2010240abfd0703ff00000000ad7433000100000103fa90000100010102a41ac50001000328b0040000400600000330f3d10001001937deadbeef0505040d842001010004030000000a0000000525e8a30101003b5a0a00000040060000010203040402c2b4bcda6901000505040300041e2f0001000328b00400004006000001ad74330008001937deadbeef0505020e2e38000f0004030000000a00000003010c6b0016003b5a0a00000040060000010203040402c2b4bcda690426ea86001d00000003fa9000630004030000000a00000001d884980063003b5a0a00000040060000010203040402c2b4bcda6902a41ac5006300005c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c",
+    "expected": {
+      "level": 35,
+      "xp": 123456,
+      "skills": [
+        {
+          "id": 29426941,
+          "level": 1
+        },
+        {
+          "id": 31613866,
+          "level": 2
+        },
+        {
+          "id": 134064960,
+          "level": 3
+        }
+      ],
+      "equipment": [
+        {
+          "slot": 0,
+          "itemId": 3372205,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 9501187,
+          "count": 1,
+          "flags": 1,
+          "level": 1
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 1,
+          "flags": 3,
+          "level": 40,
+          "durability": 1200,
+          "maxDurability": 1600
+        },
+        {
+          "slot": 3,
+          "itemId": 13759280,
+          "count": 1,
+          "flags": 25,
+          "level": 55,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 4,
+          "itemId": 18908173,
+          "count": 1,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 5,
+          "itemId": 27519013,
+          "count": 1,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        }
+      ],
+      "main": [
+        {
+          "slot": 0,
+          "itemId": 3087876,
+          "count": 1,
+          "flags": 3,
+          "level": 40,
+          "durability": 1200,
+          "maxDurability": 1600
+        },
+        {
+          "slot": 1,
+          "itemId": 3372205,
+          "count": 8,
+          "flags": 25,
+          "level": 55,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 2,
+          "itemId": 3681806,
+          "count": 15,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 3,
+          "itemId": 7015425,
+          "count": 22,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 4,
+          "itemId": 8841766,
+          "count": 29,
+          "flags": 0
+        }
+      ],
+      "extra": [
+        {
+          "slot": 0,
+          "itemId": 9501187,
+          "count": 99,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 1,
+          "itemId": 9995480,
+          "count": 99,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 99,
+          "flags": 0
+        }
+      ],
+      "equipMask": 255,
+      "equipFree": 1
+    },
+    "error": null
+  },
+  {
+    "name": "classico-zstd",
+    "A_hex": "533242480200000009010500000028b52ffd605400c50500a20a2631506d920ee9b75940e792da28bd8416981e4e9546e536bad306c4550951d558d2e209cf6cefcd36af6effff7ddbc8de44a60cffde119147df92857f67081181d4ec6029664e20c0304a0b3c39666bb7e103e362836522eb436e41e1562224a0fd951ff3f6135db2b5910c0a046173ef2031c087dca7c500de393813acbd4b16f6fbc103f55f8293abc2b1568fa2d5c8ebc75bb91f609a020b007853d5b4005491309b02aac0ae2aeaee085855389cc20c624f8005",
+    "expected": {
+      "level": 35,
+      "xp": 123456,
+      "skills": [
+        {
+          "id": 29426941,
+          "level": 1
+        },
+        {
+          "id": 31613866,
+          "level": 2
+        },
+        {
+          "id": 134064960,
+          "level": 3
+        }
+      ],
+      "equipment": [
+        {
+          "slot": 0,
+          "itemId": 3372205,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 9501187,
+          "count": 1,
+          "flags": 1,
+          "level": 1
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 1,
+          "flags": 3,
+          "level": 40,
+          "durability": 1200,
+          "maxDurability": 1600
+        },
+        {
+          "slot": 3,
+          "itemId": 13759280,
+          "count": 1,
+          "flags": 25,
+          "level": 55,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 4,
+          "itemId": 18908173,
+          "count": 1,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 5,
+          "itemId": 27519013,
+          "count": 1,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        }
+      ],
+      "main": [
+        {
+          "slot": 0,
+          "itemId": 3087876,
+          "count": 1,
+          "flags": 3,
+          "level": 40,
+          "durability": 1200,
+          "maxDurability": 1600
+        },
+        {
+          "slot": 1,
+          "itemId": 3372205,
+          "count": 8,
+          "flags": 25,
+          "level": 55,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 2,
+          "itemId": 3681806,
+          "count": 15,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 3,
+          "itemId": 7015425,
+          "count": 22,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 4,
+          "itemId": 8841766,
+          "count": 29,
+          "flags": 0
+        }
+      ],
+      "extra": [
+        {
+          "slot": 0,
+          "itemId": 9501187,
+          "count": 99,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 1,
+          "itemId": 9995480,
+          "count": 99,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 99,
+          "flags": 0
+        }
+      ],
+      "equipMask": 255,
+      "equipFree": 1
+    },
+    "error": null
+  },
+  {
+    "name": "compacto-vazio",
+    "A_hex": "5332424802000000090005000000a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a72300000040e2010003000000fd04c10101aa63e2010240abfd070300050000000cc6c1ec0100000174174dc10100000000000000000000000000000000000000000000000000000000",
+    "expected": {
+      "level": 35,
+      "xp": 123456,
+      "skills": [
+        {
+          "id": 29426941,
+          "level": 1
+        },
+        {
+          "id": 31613866,
+          "level": 2
+        },
+        {
+          "id": 134064960,
+          "level": 3
+        }
+      ],
+      "equipment": [
+        {
+          "slot": 0,
+          "itemId": 3972122124,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 3243054964,
+          "count": 1,
+          "flags": 0
+        }
+      ],
+      "main": [],
+      "extra": [],
+      "equipMask": 1280,
+      "equipFree": null
+    },
+    "error": null
+  },
+  {
+    "name": "compacto-com-inventarios",
+    "A_hex": "5332424802000000090005000000a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a72300000040e2010003000000fd04c10101aa63e2010240abfd070300050000000cc6c1ec0100000174174dc10100000505040300041e2f0001000328b00400004006000001ad74330008001937deadbeef0505020e2e38000f0004030000000a00000003010c6b0016003b5a0a00000040060000010203040402c2b4bcda690426ea86001d00000003fa9000630004030000000a00000001d884980063003b5a0a00000040060000010203040402c2b4bcda6902a41ac50063000000000000000000000000000000000000000000000000",
+    "expected": {
+      "level": 35,
+      "xp": 123456,
+      "skills": [
+        {
+          "id": 29426941,
+          "level": 1
+        },
+        {
+          "id": 31613866,
+          "level": 2
+        },
+        {
+          "id": 134064960,
+          "level": 3
+        }
+      ],
+      "equipment": [
+        {
+          "slot": 0,
+          "itemId": 3972122124,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 3243054964,
+          "count": 1,
+          "flags": 0
+        }
+      ],
+      "main": [
+        {
+          "slot": 0,
+          "itemId": 3087876,
+          "count": 1,
+          "flags": 3,
+          "level": 40,
+          "durability": 1200,
+          "maxDurability": 1600
+        },
+        {
+          "slot": 1,
+          "itemId": 3372205,
+          "count": 8,
+          "flags": 25,
+          "level": 55,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 2,
+          "itemId": 3681806,
+          "count": 15,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 3,
+          "itemId": 7015425,
+          "count": 22,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 4,
+          "itemId": 8841766,
+          "count": 29,
+          "flags": 0
+        }
+      ],
+      "extra": [
+        {
+          "slot": 0,
+          "itemId": 9501187,
+          "count": 99,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 1,
+          "itemId": 9995480,
+          "count": 99,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 99,
+          "flags": 0
+        }
+      ],
+      "equipMask": 1280,
+      "equipFree": null
+    },
+    "error": null
+  },
+  {
+    "name": "compacto-sem-equipamento",
+    "A_hex": "5332424802000000090005000000a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a72300000040e2010003000000fd04c10101aa63e2010240abfd0703000000000000000000000000000000000000000000000000000000000000",
+    "expected": {
+      "level": 35,
+      "xp": 123456,
+      "skills": [
+        {
+          "id": 29426941,
+          "level": 1
+        },
+        {
+          "id": 31613866,
+          "level": 2
+        },
+        {
+          "id": 134064960,
+          "level": 3
+        }
+      ],
+      "equipment": [],
+      "main": [],
+      "extra": [],
+      "equipMask": 0,
+      "equipFree": null
+    },
+    "error": null
+  },
+  {
+    "name": "todas-as-64-combinacoes-de-flags",
+    "A_hex": "5332424802000000090005000000a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a72300000040e2010003000000fd04c10101aa63e2010240abfd0703ff00000000ad7433000100000103fa90000100010102a41ac50001000328b0040000400600000330f3d10001001937deadbeef0505040d842001010004030000000a0000000525e8a30101003b5a0a00000040060000010203040402c2b4bcda6901000540040300041e2f0001000001041e2f000200010c02041e2f000300025e010000f401000003041e2f000400030c5e010000f401000004041e2f00050004190000006400000005041e2f000600050c190000006400000006041e2f000700065e010000f4010000190000006400000007041e2f000800070c5e010000f4010000190000006400000008041e2f00090008deadbeef09041e2f000a00090cdeadbeef0a041e2f000b000a5e010000f4010000deadbeef0b041e2f000c000b0c5e010000f4010000deadbeef0c041e2f000d000c1900000064000000deadbeef0d041e2f000e000d0c1900000064000000deadbeef0e041e2f000f000e5e010000f40100001900000064000000deadbeef0f041e2f0010000f0c5e010000f40100001900000064000000deadbeef10041e2f00110010050311041e2f001200110c050312041e2f001300125e010000f4010000050313041e2f001400130c5e010000f4010000050314041e2f001500141900000064000000050315041e2f001600150c1900000064000000050316041e2f001700165e010000f40100001900000064000000050317041e2f001800170c5e010000f40100001900000064000000050318041e2f00190018deadbeef050319041e2f001a00190cdeadbeef05031a041e2f001b001a5e010000f4010000deadbeef05031b041e2f001c001b0c5e010000f4010000deadbeef05031c041e2f001d001c1900000064000000deadbeef05031d041e2f001e001d0c1900000064000000deadbeef05031e041e2f001f001e5e010000f40100001900000064000000deadbeef05031f041e2f0020001f0c5e010000f40100001900000064000000deadbeef050320041e2f00210020c2b4bcda6921041e2f002200210cc2b4bcda6922041e2f002300225e010000f4010000c2b4bcda6923041e2f002400230c5e010000f4010000c2b4bcda6924041e2f002500241900000064000000c2b4bcda6925041e2f002600250c1900000064000000c2b4bcda6926041e2f002700265e010000f40100001900000064000000c2b4bcda6927041e2f002800270c5e010000f40100001900000064000000c2b4bcda6928041e2f00290028deadbeefc2b4bcda6929041e2f002a00290cdeadbeefc2b4bcda692a041e2f002b002a5e010000f4010000deadbeefc2b4bcda692b041e2f002c002b0c5e010000f4010000deadbeefc2b4bcda692c041e2f002d002c1900000064000000deadbeefc2b4bcda692d041e2f002e002d0c1900000064000000deadbeefc2b4bcda692e041e2f002f002e5e010000f40100001900000064000000deadbeefc2b4bcda692f041e2f0030002f0c5e010000f40100001900000064000000deadbeefc2b4bcda6930041e2f003100300503c2b4bcda6931041e2f003200310c0503c2b4bcda6932041e2f003300325e010000f40100000503c2b4bcda6933041e2f003400330c5e010000f40100000503c2b4bcda6934041e2f0035003419000000640000000503c2b4bcda6935041e2f003600350c19000000640000000503c2b4bcda6936041e2f003700365e010000f401000019000000640000000503c2b4bcda6937041e2f003800370c5e010000f401000019000000640000000503c2b4bcda6938041e2f00390038deadbeef0503c2b4bcda6939041e2f003a00390cdeadbeef0503c2b4bcda693a041e2f003b003a5e010000f4010000deadbeef0503c2b4bcda693b041e2f003c003b0c5e010000f4010000deadbeef0503c2b4bcda693c041e2f003d003c1900000064000000deadbeef0503c2b4bcda693d041e2f003e003d0c1900000064000000deadbeef0503c2b4bcda693e041e2f003f003e5e010000f40100001900000064000000deadbeef0503c2b4bcda693f041e2f0040003f0c5e010000f40100001900000064000000deadbeef0503c2b4bcda690003fa9000630004030000000a00000001d884980063003b5a0a00000040060000010203040402c2b4bcda6902a41ac5006300005c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c",
+    "expected": {
+      "level": 35,
+      "xp": 123456,
+      "skills": [
+        {
+          "id": 29426941,
+          "level": 1
+        },
+        {
+          "id": 31613866,
+          "level": 2
+        },
+        {
+          "id": 134064960,
+          "level": 3
+        }
+      ],
+      "equipment": [
+        {
+          "slot": 0,
+          "itemId": 3372205,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 9501187,
+          "count": 1,
+          "flags": 1,
+          "level": 1
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 1,
+          "flags": 3,
+          "level": 40,
+          "durability": 1200,
+          "maxDurability": 1600
+        },
+        {
+          "slot": 3,
+          "itemId": 13759280,
+          "count": 1,
+          "flags": 25,
+          "level": 55,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 4,
+          "itemId": 18908173,
+          "count": 1,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 5,
+          "itemId": 27519013,
+          "count": 1,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        }
+      ],
+      "main": [
+        {
+          "slot": 0,
+          "itemId": 3087876,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 3087876,
+          "count": 2,
+          "flags": 1,
+          "level": 12
+        },
+        {
+          "slot": 2,
+          "itemId": 3087876,
+          "count": 3,
+          "flags": 2,
+          "durability": 350,
+          "maxDurability": 500
+        },
+        {
+          "slot": 3,
+          "itemId": 3087876,
+          "count": 4,
+          "flags": 3,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500
+        },
+        {
+          "slot": 4,
+          "itemId": 3087876,
+          "count": 5,
+          "flags": 4,
+          "liquid": 25,
+          "maxLiquid": 100
+        },
+        {
+          "slot": 5,
+          "itemId": 3087876,
+          "count": 6,
+          "flags": 5,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100
+        },
+        {
+          "slot": 6,
+          "itemId": 3087876,
+          "count": 7,
+          "flags": 6,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100
+        },
+        {
+          "slot": 7,
+          "itemId": 3087876,
+          "count": 8,
+          "flags": 7,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100
+        },
+        {
+          "slot": 8,
+          "itemId": 3087876,
+          "count": 9,
+          "flags": 8,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 9,
+          "itemId": 3087876,
+          "count": 10,
+          "flags": 9,
+          "level": 12,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 10,
+          "itemId": 3087876,
+          "count": 11,
+          "flags": 10,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 11,
+          "itemId": 3087876,
+          "count": 12,
+          "flags": 11,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 12,
+          "itemId": 3087876,
+          "count": 13,
+          "flags": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 13,
+          "itemId": 3087876,
+          "count": 14,
+          "flags": 13,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 14,
+          "itemId": 3087876,
+          "count": 15,
+          "flags": 14,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 15,
+          "itemId": 3087876,
+          "count": 16,
+          "flags": 15,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef"
+        },
+        {
+          "slot": 16,
+          "itemId": 3087876,
+          "count": 17,
+          "flags": 16,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 17,
+          "itemId": 3087876,
+          "count": 18,
+          "flags": 17,
+          "level": 12,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 18,
+          "itemId": 3087876,
+          "count": 19,
+          "flags": 18,
+          "durability": 350,
+          "maxDurability": 500,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 19,
+          "itemId": 3087876,
+          "count": 20,
+          "flags": 19,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 20,
+          "itemId": 3087876,
+          "count": 21,
+          "flags": 20,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 21,
+          "itemId": 3087876,
+          "count": 22,
+          "flags": 21,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 22,
+          "itemId": 3087876,
+          "count": 23,
+          "flags": 22,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 23,
+          "itemId": 3087876,
+          "count": 24,
+          "flags": 23,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 24,
+          "itemId": 3087876,
+          "count": 25,
+          "flags": 24,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 25,
+          "itemId": 3087876,
+          "count": 26,
+          "flags": 25,
+          "level": 12,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 26,
+          "itemId": 3087876,
+          "count": 27,
+          "flags": 26,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 27,
+          "itemId": 3087876,
+          "count": 28,
+          "flags": 27,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 28,
+          "itemId": 3087876,
+          "count": 29,
+          "flags": 28,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 29,
+          "itemId": 3087876,
+          "count": 30,
+          "flags": 29,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 30,
+          "itemId": 3087876,
+          "count": 31,
+          "flags": 30,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 31,
+          "itemId": 3087876,
+          "count": 32,
+          "flags": 31,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3
+        },
+        {
+          "slot": 32,
+          "itemId": 3087876,
+          "count": 33,
+          "flags": 32,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 33,
+          "itemId": 3087876,
+          "count": 34,
+          "flags": 33,
+          "level": 12,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 34,
+          "itemId": 3087876,
+          "count": 35,
+          "flags": 34,
+          "durability": 350,
+          "maxDurability": 500,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 35,
+          "itemId": 3087876,
+          "count": 36,
+          "flags": 35,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 36,
+          "itemId": 3087876,
+          "count": 37,
+          "flags": 36,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 37,
+          "itemId": 3087876,
+          "count": 38,
+          "flags": 37,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 38,
+          "itemId": 3087876,
+          "count": 39,
+          "flags": 38,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 39,
+          "itemId": 3087876,
+          "count": 40,
+          "flags": 39,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 40,
+          "itemId": 3087876,
+          "count": 41,
+          "flags": 40,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 41,
+          "itemId": 3087876,
+          "count": 42,
+          "flags": 41,
+          "level": 12,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 42,
+          "itemId": 3087876,
+          "count": 43,
+          "flags": 42,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 43,
+          "itemId": 3087876,
+          "count": 44,
+          "flags": 43,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 44,
+          "itemId": 3087876,
+          "count": 45,
+          "flags": 44,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 45,
+          "itemId": 3087876,
+          "count": 46,
+          "flags": 45,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 46,
+          "itemId": 3087876,
+          "count": 47,
+          "flags": 46,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 47,
+          "itemId": 3087876,
+          "count": 48,
+          "flags": 47,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 48,
+          "itemId": 3087876,
+          "count": 49,
+          "flags": 48,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 49,
+          "itemId": 3087876,
+          "count": 50,
+          "flags": 49,
+          "level": 12,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 50,
+          "itemId": 3087876,
+          "count": 51,
+          "flags": 50,
+          "durability": 350,
+          "maxDurability": 500,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 51,
+          "itemId": 3087876,
+          "count": 52,
+          "flags": 51,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 52,
+          "itemId": 3087876,
+          "count": 53,
+          "flags": 52,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 53,
+          "itemId": 3087876,
+          "count": 54,
+          "flags": 53,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 54,
+          "itemId": 3087876,
+          "count": 55,
+          "flags": 54,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 55,
+          "itemId": 3087876,
+          "count": 56,
+          "flags": 55,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 56,
+          "itemId": 3087876,
+          "count": 57,
+          "flags": 56,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 57,
+          "itemId": 3087876,
+          "count": 58,
+          "flags": 57,
+          "level": 12,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 58,
+          "itemId": 3087876,
+          "count": 59,
+          "flags": 58,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 59,
+          "itemId": 3087876,
+          "count": 60,
+          "flags": 59,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 60,
+          "itemId": 3087876,
+          "count": 61,
+          "flags": 60,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 61,
+          "itemId": 3087876,
+          "count": 62,
+          "flags": 61,
+          "level": 12,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 62,
+          "itemId": 3087876,
+          "count": 63,
+          "flags": 62,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 63,
+          "itemId": 3087876,
+          "count": 64,
+          "flags": 63,
+          "level": 12,
+          "durability": 350,
+          "maxDurability": 500,
+          "liquid": 25,
+          "maxLiquid": 100,
+          "appearance": "deadbeef",
+          "maxUpgrades": 5,
+          "upgrades": 3,
+          "socket": "c2b4bcda69"
+        }
+      ],
+      "extra": [
+        {
+          "slot": 0,
+          "itemId": 9501187,
+          "count": 99,
+          "flags": 4,
+          "liquid": 3,
+          "maxLiquid": 10
+        },
+        {
+          "slot": 1,
+          "itemId": 9995480,
+          "count": 99,
+          "flags": 59,
+          "level": 90,
+          "durability": 10,
+          "maxDurability": 1600,
+          "appearance": "01020304",
+          "maxUpgrades": 4,
+          "upgrades": 2,
+          "socket": "c2b4bcda69"
+        },
+        {
+          "slot": 2,
+          "itemId": 12917412,
+          "count": 99,
+          "flags": 0
+        }
+      ],
+      "equipMask": 255,
+      "equipFree": 1
+    },
+    "error": null
+  },
+  {
+    "name": "habilidade-desconhecida",
+    "A_hex": "5332424802000000090005000000a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a72300000040e2010003000000ffffffff01aa63e2010240abfd0703ff00000000ad7433000100000103fa90000100010102a41ac50001000328b0040000400600000330f3d10001001937deadbeef0505040d842001010004030000000a0000000525e8a30101003b5a0a00000040060000010203040402c2b4bcda6901000505040300041e2f0001000328b00400004006000001ad74330008001937deadbeef0505020e2e38000f0004030000000a00000003010c6b0016003b5a0a00000040060000010203040402c2b4bcda690426ea86001d00000003fa9000630004030000000a00000001d884980063003b5a0a00000040060000010203040402c2b4bcda6902a41ac5006300005c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c",
+    "expected": null,
+    "error": "Lista de habilidades não reconhecida"
+  },
+  {
+    "name": "truncado",
+    "A_hex": "5332424802000000090005000000000000000000000000000000",
+    "expected": null,
+    "error": "The value of \"offset\" is out of range. It must be >= 0 and <= 8. Received 58"
+  },
+  {
+    "name": "save-real-character0.ksd",
+    "A_hex": "533242480200000009010500000028b52ffd60e0021d1a00c632bd3d40e44a6b1bd68cda002fc257640e1b261ed7aa37edea127d0fa1b46f568216c915ba935a1e588828e461a0d609500c75407b244258c73c10bcc9de3205be00ae00a8008d5ff8005d348d79142e11adafbc6bc4144175eda03113ef83bca7f44a52816470a722baee2d9c1202c93df3732bb33e99fc4bbb77086b84598fb420647825174411ef212091e015d3c706cbc54003aa77d5a28a20b8190205405a0f1572ca5d303841735625209a14eff25095e82d4365a75d29a86f73eb548dd8878d62b8095b1dd3eac0068cda3d38f14007c33fc22701fab72ac4fd575f0321d72ac9e991ce1c0333834f087d46c87db5f1a2e0c0d84d7c94aee510d4f847a7b9e2062cbbd57ebba271cefc7c1627272707abeabc01aef47b809be154e5276b53d1a865cd5f93b8e5477f57daa0067c7f902dd31aff206476fdea50634f986c05cf32eb3b65a113efb08a1e79ea4d83d65d7a6c73bb65b9d0f49fbd307f9771d171ee9e3903a1b86022dfee4aa7bc42b6ca111ce4b4fa41fbc8ee95263a1c77cf863978f72eeeea71acc60149be339366590c4bd1cf5ccd25728b09c442622ecfb32f211976789d6b8547570e8abef50685886a6d4e37ebb4a64c69d333d53d496530fd7cd50017d757126ecd41bb9527c10e02cbbeeae5c5f50d4b93a646896599da2f1bd8d547501b64083057afda6f12a15795d103d833a448a767e787b6fc253652765c5f2d3392804ffda729d8a2e37d65db8b659e5b6514fb77820b0e63457f079d7b50a2bf6852f410972c6bd47ec396b0a803101805c608562a0f3a44d923328a606559acf65b84b724a9b26c54fb850281347903ffff5a53a6f4d75536c309455486ccc4e2a6543d3ccea42e388ba00c7865596097314f7f23ec1d523a7d7f38b7f95db07696d4b4f2aab9d42a25057815e988e8f5c6130a346bf94c8c69528ecf8f7c1e762852e021cba4d42458cdfe29ae9a5f275337c5aa57204845c71981dfebae5fc3a51d784eaabff78d050153af6bfb1d846c4e45bdfe355b9bdf2cc6382050bf6a84c5f535c1c1c7d3d32f03202090024443b50d7312a3a133b461e85e9b66c50e842bb3b220df20b3f1cc5e2d3b93c52ef3dd9861bfe8d92cab92019d783aeef531163b723882f90c513bf40d4d7c73fa4419cc32bb4599",
+    "expected": {
+      "level": 50,
+      "xp": 4083,
+      "skills": [
+        {
+          "id": 3576056527,
+          "level": 0
+        },
+        {
+          "id": 3242233909,
+          "level": 0
+        },
+        {
+          "id": 3916335172,
+          "level": 3
+        },
+        {
+          "id": 174576457,
+          "level": 0
+        },
+        {
+          "id": 3385478732,
+          "level": 3
+        },
+        {
+          "id": 1023573379,
+          "level": 3
+        },
+        {
+          "id": 3223249169,
+          "level": 1
+        },
+        {
+          "id": 134064960,
+          "level": 1
+        },
+        {
+          "id": 2571965916,
+          "level": 3
+        },
+        {
+          "id": 1149171418,
+          "level": 1
+        },
+        {
+          "id": 4261093250,
+          "level": 3
+        },
+        {
+          "id": 1173687821,
+          "level": 1
+        },
+        {
+          "id": 1863946535,
+          "level": 1
+        },
+        {
+          "id": 1131166881,
+          "level": 1
+        },
+        {
+          "id": 3166359215,
+          "level": 1
+        },
+        {
+          "id": 3519088837,
+          "level": 1
+        },
+        {
+          "id": 4264247508,
+          "level": 1
+        },
+        {
+          "id": 2489448655,
+          "level": 3
+        },
+        {
+          "id": 3804983481,
+          "level": 1
+        },
+        {
+          "id": 2751446638,
+          "level": 3
+        },
+        {
+          "id": 1757117632,
+          "level": 1
+        },
+        {
+          "id": 3433516950,
+          "level": 1
+        },
+        {
+          "id": 3377542145,
+          "level": 1
+        },
+        {
+          "id": 4272552236,
+          "level": 1
+        },
+        {
+          "id": 899622224,
+          "level": 1
+        },
+        {
+          "id": 3781823445,
+          "level": 1
+        },
+        {
+          "id": 168513822,
+          "level": 1
+        },
+        {
+          "id": 2402369183,
+          "level": 1
+        },
+        {
+          "id": 3337133885,
+          "level": 1
+        },
+        {
+          "id": 3904289011,
+          "level": 1
+        },
+        {
+          "id": 3646732803,
+          "level": 1
+        },
+        {
+          "id": 527879180,
+          "level": 1
+        },
+        {
+          "id": 1442728401,
+          "level": 0
+        },
+        {
+          "id": 3005573120,
+          "level": 0
+        },
+        {
+          "id": 3166875476,
+          "level": 0
+        },
+        {
+          "id": 856922754,
+          "level": 0
+        },
+        {
+          "id": 1311628529,
+          "level": 0
+        },
+        {
+          "id": 2506510512,
+          "level": 0
+        },
+        {
+          "id": 770186136,
+          "level": 0
+        },
+        {
+          "id": 2508204276,
+          "level": 1
+        },
+        {
+          "id": 3980909207,
+          "level": 1
+        },
+        {
+          "id": 2903868533,
+          "level": 1
+        },
+        {
+          "id": 3141319256,
+          "level": 3
+        },
+        {
+          "id": 3653629718,
+          "level": 3
+        },
+        {
+          "id": 2214899032,
+          "level": 3
+        },
+        {
+          "id": 3086646529,
+          "level": 1
+        },
+        {
+          "id": 1746924892,
+          "level": 1
+        },
+        {
+          "id": 3873499523,
+          "level": 1
+        },
+        {
+          "id": 4071143870,
+          "level": 0
+        },
+        {
+          "id": 2091926037,
+          "level": 0
+        },
+        {
+          "id": 882997635,
+          "level": 0
+        },
+        {
+          "id": 494749233,
+          "level": 0
+        },
+        {
+          "id": 2166505620,
+          "level": 0
+        },
+        {
+          "id": 2500131673,
+          "level": 0
+        },
+        {
+          "id": 2900625199,
+          "level": 0
+        },
+        {
+          "id": 408134555,
+          "level": 0
+        }
+      ],
+      "equipment": [
+        {
+          "slot": 0,
+          "itemId": 876665028,
+          "count": 1,
+          "flags": 17,
+          "level": 50,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 1,
+          "itemId": 407703039,
+          "count": 1,
+          "flags": 17,
+          "level": 25,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 2,
+          "itemId": 160895742,
+          "count": 1,
+          "flags": 17,
+          "level": 45,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 3,
+          "itemId": 2264547367,
+          "count": 1,
+          "flags": 17,
+          "level": 45,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 4,
+          "itemId": 480197774,
+          "count": 1,
+          "flags": 17,
+          "level": 45,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 5,
+          "itemId": 3265619282,
+          "count": 1,
+          "flags": 17,
+          "level": 50,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 6,
+          "itemId": 1234854024,
+          "count": 1,
+          "flags": 17,
+          "level": 10,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 7,
+          "itemId": 1789305300,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 8,
+          "itemId": 3357517884,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 9,
+          "itemId": 996296787,
+          "count": 1,
+          "flags": 0
+        }
+      ],
+      "main": [
+        {
+          "slot": 0,
+          "itemId": 2053375978,
+          "count": 4,
+          "flags": 0
+        },
+        {
+          "slot": 1,
+          "itemId": 3376734441,
+          "count": 23,
+          "flags": 0
+        },
+        {
+          "slot": 2,
+          "itemId": 1536371128,
+          "count": 2,
+          "flags": 0
+        },
+        {
+          "slot": 3,
+          "itemId": 3466985705,
+          "count": 18,
+          "flags": 0
+        },
+        {
+          "slot": 7,
+          "itemId": 2710616938,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 8,
+          "itemId": 2835143812,
+          "count": 6,
+          "flags": 0
+        },
+        {
+          "slot": 10,
+          "itemId": 264976161,
+          "count": 1,
+          "flags": 17,
+          "level": 40,
+          "maxUpgrades": 2,
+          "upgrades": 0
+        },
+        {
+          "slot": 11,
+          "itemId": 1014087456,
+          "count": 1,
+          "flags": 17,
+          "level": 25,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 12,
+          "itemId": 2034509824,
+          "count": 1,
+          "flags": 17,
+          "level": 20,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 16,
+          "itemId": 1237806794,
+          "count": 1,
+          "flags": 51,
+          "level": 55,
+          "durability": 567,
+          "maxDurability": 567,
+          "maxUpgrades": 5,
+          "upgrades": 5,
+          "socket": "36903a9f32"
+        },
+        {
+          "slot": 17,
+          "itemId": 4269700656,
+          "count": 1,
+          "flags": 51,
+          "level": 51,
+          "durability": 548,
+          "maxDurability": 549,
+          "maxUpgrades": 5,
+          "upgrades": 5,
+          "socket": "0000000000"
+        },
+        {
+          "slot": 20,
+          "itemId": 2283229289,
+          "count": 20,
+          "flags": 0
+        },
+        {
+          "slot": 21,
+          "itemId": 835259216,
+          "count": 5000,
+          "flags": 0
+        },
+        {
+          "slot": 22,
+          "itemId": 3436474234,
+          "count": 7,
+          "flags": 0
+        },
+        {
+          "slot": 23,
+          "itemId": 1464370967,
+          "count": 1,
+          "flags": 51,
+          "level": 45,
+          "durability": 522,
+          "maxDurability": 522,
+          "maxUpgrades": 5,
+          "upgrades": 0,
+          "socket": "0000000000"
+        },
+        {
+          "slot": 24,
+          "itemId": 803635338,
+          "count": 1,
+          "flags": 19,
+          "level": 3,
+          "durability": 358,
+          "maxDurability": 358,
+          "maxUpgrades": 3,
+          "upgrades": 0
+        },
+        {
+          "slot": 25,
+          "itemId": 3371766557,
+          "count": 1,
+          "flags": 17,
+          "level": 3,
+          "maxUpgrades": 3,
+          "upgrades": 0
+        },
+        {
+          "slot": 29,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 30,
+          "itemId": 835259216,
+          "count": 5000,
+          "flags": 0
+        },
+        {
+          "slot": 31,
+          "itemId": 3474096535,
+          "count": 1,
+          "flags": 3,
+          "level": 1,
+          "durability": 55,
+          "maxDurability": 55
+        },
+        {
+          "slot": 32,
+          "itemId": 3316218728,
+          "count": 42,
+          "flags": 0
+        },
+        {
+          "slot": 33,
+          "itemId": 2664004828,
+          "count": 1,
+          "flags": 19,
+          "level": 40,
+          "durability": 93,
+          "maxDurability": 93,
+          "maxUpgrades": 5,
+          "upgrades": 0
+        },
+        {
+          "slot": 34,
+          "itemId": 1528590138,
+          "count": 249,
+          "flags": 0
+        },
+        {
+          "slot": 35,
+          "itemId": 634473105,
+          "count": 250,
+          "flags": 0
+        },
+        {
+          "slot": 37,
+          "itemId": 3865976041,
+          "count": 20,
+          "flags": 0
+        }
+      ],
+      "extra": [
+        {
+          "slot": 7,
+          "itemId": 631520303,
+          "count": 882,
+          "flags": 0
+        },
+        {
+          "slot": 8,
+          "itemId": 835259216,
+          "count": 5000,
+          "flags": 0
+        },
+        {
+          "slot": 12,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 13,
+          "itemId": 2283229289,
+          "count": 2,
+          "flags": 0
+        },
+        {
+          "slot": 14,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 15,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 16,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 17,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 18,
+          "itemId": 30818586,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 19,
+          "itemId": 835259216,
+          "count": 1064,
+          "flags": 0
+        },
+        {
+          "slot": 21,
+          "itemId": 729180175,
+          "count": 1,
+          "flags": 19,
+          "level": 1,
+          "durability": 215,
+          "maxDurability": 215,
+          "maxUpgrades": 1,
+          "upgrades": 0
+        },
+        {
+          "slot": 22,
+          "itemId": 950598916,
+          "count": 1,
+          "flags": 0
+        },
+        {
+          "slot": 23,
+          "itemId": 1539486909,
+          "count": 4,
+          "flags": 0
+        },
+        {
+          "slot": 27,
+          "itemId": 1109330340,
+          "count": 1,
+          "flags": 17,
+          "level": 25,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 28,
+          "itemId": 48989544,
+          "count": 1,
+          "flags": 17,
+          "level": 25,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 29,
+          "itemId": 4234563200,
+          "count": 1,
+          "flags": 17,
+          "level": 25,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        },
+        {
+          "slot": 30,
+          "itemId": 2043624201,
+          "count": 1,
+          "flags": 17,
+          "level": 25,
+          "maxUpgrades": 5,
+          "upgrades": 5
+        }
+      ],
+      "equipMask": 61408,
+      "equipFree": null
+    },
+    "error": null
+  }
+]

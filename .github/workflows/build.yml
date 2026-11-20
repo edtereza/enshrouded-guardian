@@ -1,0 +1,31 @@
+name: Guardian build
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - name: Test Shroudtopia adapter
+        run: cargo test --locked --target x86_64-pc-windows-msvc --features shroudtopia
+      - name: Build Shroudtopia adapter only
+        run: cargo build --locked --release --target x86_64-pc-windows-msvc --features shroudtopia
+      - name: Package DLL and complete server ZIP
+        shell: pwsh
+        run: ./scripts/package-shroudtopia.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: guardian
+          path: target/distribution/*
+          if-no-files-found: error
+          retention-days: 90

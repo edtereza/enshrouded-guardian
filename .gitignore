@@ -1,0 +1,9 @@
+/target/
+/dist/
+/.env
+/.env.*
+/guardian/
+/guardian.json
+/shroudtopia.json
+*.pdb
+bbcode-nexus.txt

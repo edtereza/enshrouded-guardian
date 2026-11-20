@@ -1,0 +1,8 @@
+{
+  "mode": "enforce",
+  "whitelist": {
+    "enabled": false,
+    "players": []
+  },
+  "admins": []
+}
