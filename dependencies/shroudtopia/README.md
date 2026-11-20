@@ -15,9 +15,11 @@ They are pinned third-party binaries, not compiled by the Guardian workflow.
 | winmm.dll | 2519AB074597C39F9241456711370CAC907E86957833A7AE16705714CE6D7297 |
 
 The package script verifies these hashes and includes the upstream MIT license.
-Only Guardian and Shroudtopia files are included in the archive. Shroudtopia
-requires Microsoft Visual C++ Redistributable x64, installed separately on the
-server. Microsoft runtime DLLs are not bundled.
+The standard ZIP contains only Guardian and Shroudtopia files. Shroudtopia
+requires Microsoft Visual C++ Redistributable x64, installed separately when
+using that ZIP. The -full.zip also includes the unmodified app-local x64 CRT
+DLLs from Visual Studio VC/Redist and their license notice. Each package has
+its own SHA-256 file manifest. Windows system DLLs are never bundled.
 
 No Flight Mod, basics mod, server executable, credentials, player saves or
 existing server configuration is distributed.

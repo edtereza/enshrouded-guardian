@@ -342,9 +342,13 @@ oficial Shroudtopia 0.1.1. Seus hashes fixados e procedência estão documentado
 dependencies/shroudtopia/README.md. O GitHub compila o Guardian, não esse loader.
 
 O empacotamento por scripts/package-shroudtopia.ps1 é restrito ao GitHub Actions.
-O ZIP contém somente arquivos do Guardian e do Shroudtopia. O Microsoft Visual
-C++ Redistributable x64 deve ser instalado separadamente no servidor para o
-Shroudtopia; as DLLs do runtime não estão incluídas.
+A mesma build gera dois ZIPs. Escolha um:
+
+- `guardian-{versão}.zip`: somente Guardian/Shroudtopia; instale o Visual C++ Redistributable x64 separadamente.
+- `guardian-{versão}-full.zip`: os mesmos arquivos mais o runtime Visual C++ x64 local e seu aviso de licença.
+
+Ambos são extraídos diretamente na raiz do servidor e possuem manifesto de
+arquivos/hashes. SHA256SUMS.txt cobre os dois ZIPs e guardian.dll.
 O verificador de atualizações consulta as versões estáveis publicadas em Releases.
 O template HTML incorporado não contém mais um save de jogador de exemplo.
 Os testes automatizados não substituem validação dentro do jogo.

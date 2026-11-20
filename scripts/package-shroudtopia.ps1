@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$DllPath = 'target/x86_64-pc-windows-msvc/release/dbghelp.dll'
+    [string]$DllPath = 'target/x86_64-pc-windows-msvc/release/dbghelp.dll',
+    [string]$CrtDirectory
 )
 $ErrorActionPreference = 'Stop'
 if ($env:GITHUB_ACTIONS -ne 'true' -or !$env:GITHUB_RUN_ID) {
@@ -25,6 +26,19 @@ foreach ($name in $loaderHashes.Keys) {
         throw "Bundled loader hash mismatch: $name"
     }
 }
+if (!$CrtDirectory) {
+    $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
+    $vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+    if (!$vs) { throw 'Visual Studio C++ installation not found' }
+    $CrtDirectory = Get-ChildItem "$vs/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT" -Directory |
+        Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+}
+foreach ($name in @('msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll')) {
+    if (!(Test-Path -LiteralPath (Join-Path $CrtDirectory $name))) { throw "Missing x64 CRT: $name" }
+}
+$crtFiles = @(Get-ChildItem -LiteralPath $CrtDirectory -Filter '*.dll' -File)
+$deliverables = @('guardian.dll')
+foreach ($package in @('standard', 'full')) {
 # Unique staging avoids deleting any user-selected directory.
 $stage = Join-Path $root ("target/package-stage-" + [guid]::NewGuid().ToString('N'))
 $output = Join-Path $root 'target/distribution'
@@ -43,6 +57,14 @@ $allowedFiles = @(
     'licenses/Guardian-LICENSE.txt', 'licenses/Shroudtopia-LICENSE.txt',
     'licenses/shroudtopia-README.md'
 )
+if ($package -eq 'full') {
+    foreach ($file in $crtFiles) {
+        Copy-Item -LiteralPath $file.FullName -Destination $stage
+        $allowedFiles += $file.Name
+    }
+    Copy-Item templates/Microsoft-runtime-NOTICE.txt "$stage/licenses/Microsoft-runtime-NOTICE.txt"
+    $allowedFiles += 'licenses/Microsoft-runtime-NOTICE.txt'
+}
 $stagedFiles = @(Get-ChildItem $stage -File -Recurse)
 if ($stagedFiles.Count -ne $allowedFiles.Count) { throw 'Unexpected package file count' }
 foreach ($file in $stagedFiles) {
@@ -57,9 +79,10 @@ $files = @(Get-ChildItem $stage -File -Recurse | Sort-Object FullName | ForEach-
         fileVersion = $_.VersionInfo.FileVersion
     }
 })
-[ordered]@{ version = $version; variant = 'shroudtopia'; commit = $env:GITHUB_SHA; files = $files } |
+[ordered]@{ version = $version; variant = 'shroudtopia'; package = $package; commit = $env:GITHUB_SHA; files = $files } |
     ConvertTo-Json -Depth 6 | Set-Content "$stage/package-manifest.json" -Encoding utf8
-$zip = Join-Path $output "guardian-$version.zip"
+$zipName = if ($package -eq 'full') { "guardian-$version-full.zip" } else { "guardian-$version.zip" }
+$zip = Join-Path $output $zipName
 Compress-Archive -Path "$stage/*" -DestinationPath $zip -Force
 Copy-Item -LiteralPath $dll -Destination "$output/guardian.dll" -Force
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -81,8 +104,10 @@ try {
         if ($hash -ne $file.sha256) { throw "ZIP hash mismatch: $($file.path)" }
     }
 } finally { $archive.Dispose() }
-@('guardian.dll', (Split-Path $zip -Leaf)) | ForEach-Object {
+$deliverables += $zipName
+Write-Host "Verified $package package: $zip"
+}
+$deliverables | ForEach-Object {
     "$((Get-FileHash (Join-Path $output $_) -Algorithm SHA256).Hash.ToLowerInvariant())  $_"
 } | Set-Content "$output/SHA256SUMS.txt" -Encoding ascii
-Write-Host "Verified package: $zip"
 Write-Host "Standalone DLL: $output/guardian.dll"

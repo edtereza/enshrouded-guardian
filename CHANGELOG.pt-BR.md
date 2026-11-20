@@ -2,6 +2,12 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 3.0.8 — 20/11/2026
+
+- Build e Releases disponibilizam guardian-{versão}.zip (somente Guardian/Shroudtopia) e guardian-{versão}-full.zip (inclui runtime Visual C++ x64 local e aviso).
+- Ambos validam listas de arquivos, hashes e manifestos independentes; SHA256SUMS.txt cobre os dois ZIPs e guardian.dll.
+- Testes automatizados e validação dos pacotes pelo GitHub Actions; sem mudança de jogabilidade ou novo teste dentro do jogo.
+
 ## 3.0.7 — 20/11/2026
 
 - Removidas DLLs do runtime Microsoft Visual C++ e seu aviso do ZIP. Mantidos somente arquivos do Guardian/Shroudtopia, configurações base, instruções, licenças e manifesto de hashes.

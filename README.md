@@ -364,7 +364,7 @@ See the [changelog](CHANGELOG.md) for version history.
 
 GitHub Actions builds **only the Shroudtopia adapter** on pushes to main, pull
 requests and manual dispatch. The guardian artifact contains guardian.dll,
-guardian-{version}.zip and SHA256SUMS.txt and is retained for 90 days.
+guardian-{version}.zip, guardian-{version}-full.zip and SHA256SUMS.txt and is retained for 90 days.
 Tags v<version> must match Cargo.toml and automatically publish those same
 GitHub-built files to Releases after the build succeeds. Packages are never
 compiled locally for distribution.
@@ -382,9 +382,13 @@ Their provenance and hashes are recorded in dependencies/shroudtopia/README.md.
 
 The workflow invokes scripts/package-shroudtopia.ps1; distribution packaging
 is restricted to GitHub Actions. Local builds are for development/testing only.
-The ZIP contains only Guardian and Shroudtopia files. Microsoft Visual C++
-Redistributable x64 must be installed separately on the server for Shroudtopia;
-Microsoft runtime DLLs are not bundled.
+Two ZIPs are built and published together. Choose one:
+
+- `guardian-{version}.zip`: only Guardian/Shroudtopia files; install Microsoft Visual C++ Redistributable x64 separately.
+- `guardian-{version}-full.zip`: the same files plus app-local Visual C++ x64 runtime DLLs and their license notice.
+
+Both extract directly into the server root. Each has a file/hash manifest;
+SHA256SUMS.txt covers both archives and the standalone guardian.dll.
 
 The embedded HTML template contains no example player save; runtime reports
 receive the current account's data from Guardian.
