@@ -1,3 +1,7 @@
+<p align="center">
+  <img src=".github/capa-guardian.png" alt="Enshrouded Server Guardian protecting players and their progress" width="100%">
+</p>
+
 # Enshrouded Guardian
 
 Server-side character management for **Enshrouded dedicated servers**.

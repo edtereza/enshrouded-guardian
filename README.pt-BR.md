@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/capa.png" alt="Enshrouded Server Guardian" width="100%">
+  <img src=".github/capa-guardian.png" alt="Enshrouded Server Guardian protegendo os jogadores e seu progresso" width="100%">
 </p>
 
 <h1 align="center">Enshrouded Server Guardian</h1>
