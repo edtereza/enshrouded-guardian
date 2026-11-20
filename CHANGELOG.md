@@ -2,6 +2,12 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 3.0.7 — 2026-11-20
+
+- Removed Microsoft Visual C++ runtime DLLs and their notice from the server ZIP. Only Guardian/Shroudtopia files, base configs, installation notes, licenses and hash manifest are packaged.
+- Packaging validates an explicit file allowlist and ZIP entries/hashes. Documented Visual C++ Redistributable x64 as a separately installed Shroudtopia prerequisite.
+- GitHub Actions performs automated tests and package validation; no in-game change or new in-game testing.
+
 ## 3.0.6 — 2026-11-20
 
 - Artifact name is guardian; the complete server archive is named guardian-{version}.zip. Packages are built exclusively in GitHub Actions, retained as artifacts for 90 days and automatically published to Releases for matching version tags.

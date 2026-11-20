@@ -333,7 +333,7 @@ disponível no Actions por 90 dias.
 
 Extraia guardian-<versão>.zip diretamente ao lado de
 enshrouded_server.exe, com o servidor parado. Inclui mods/guardian.dll, loader
-Shroudtopia, runtime Visual C++ x64 local, JSONs iniciais, instruções, licenças e
+Shroudtopia, JSONs iniciais, instruções, licenças e
 manifesto de hashes. Preserve backup das DLLs e configurações existentes; após
 extrair, restaure/mescle seus JSONs. Não contém saves nem arquivos do jogo.
 
@@ -342,7 +342,9 @@ oficial Shroudtopia 0.1.1. Seus hashes fixados e procedência estão documentado
 dependencies/shroudtopia/README.md. O GitHub compila o Guardian, não esse loader.
 
 O empacotamento por scripts/package-shroudtopia.ps1 é restrito ao GitHub Actions.
-O diretório redistribuível CRT x64 do Visual Studio é detectado automaticamente.
+O ZIP contém somente arquivos do Guardian e do Shroudtopia. O Microsoft Visual
+C++ Redistributable x64 deve ser instalado separadamente no servidor para o
+Shroudtopia; as DLLs do runtime não estão incluídas.
 O verificador de atualizações consulta as versões estáveis publicadas em Releases.
 O template HTML incorporado não contém mais um save de jogador de exemplo.
 Os testes automatizados não substituem validação dentro do jogo.

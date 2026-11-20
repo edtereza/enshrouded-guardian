@@ -2,6 +2,12 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 3.0.7 — 20/11/2026
+
+- Removidas DLLs do runtime Microsoft Visual C++ e seu aviso do ZIP. Mantidos somente arquivos do Guardian/Shroudtopia, configurações base, instruções, licenças e manifesto de hashes.
+- Empacotamento valida lista explícita de arquivos permitidos, entradas e hashes do ZIP. Visual C++ Redistributable x64 documentado como pré-requisito separado do Shroudtopia.
+- GitHub Actions executa testes automatizados e validação do pacote; sem mudança de jogabilidade ou novo teste dentro do jogo.
+
 ## 3.0.6 — 20/11/2026
 
 - Artefato chamado guardian; o pacote completo usa o nome guardian-{versão}.zip. Pacotes gerados exclusivamente pelo GitHub Actions, mantidos como artefatos por 90 dias e publicados automaticamente em Releases para tags de versão correspondentes.

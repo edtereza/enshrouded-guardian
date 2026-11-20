@@ -372,7 +372,7 @@ Automated tests run before packaging; they do not replace in-game testing.
 
 Extract guardian-<version>.zip directly beside
 enshrouded_server.exe. It includes mods/guardian.dll, the pinned Shroudtopia
-loader, app-local x64 Visual C++ runtime, clean JSON defaults, installation notes,
+loader, clean JSON defaults, installation notes,
 licenses and a hash manifest. Stop the server and back up DLLs and JSON settings
 before extracting. Restore/merge your existing settings afterward. No player
 saves or game files are included. The loader binaries are from the development
@@ -382,9 +382,9 @@ Their provenance and hashes are recorded in dependencies/shroudtopia/README.md.
 
 The workflow invokes scripts/package-shroudtopia.ps1; distribution packaging
 is restricted to GitHub Actions. Local builds are for development/testing only.
-The script discovers Visual Studio's x64 redistributable CRT directory.
-Microsoft's redistribution documentation describes these app-local runtime files:
-https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution
+The ZIP contains only Guardian and Shroudtopia files. Microsoft Visual C++
+Redistributable x64 must be installed separately on the server for Shroudtopia;
+Microsoft runtime DLLs are not bundled.
 
 The embedded HTML template contains no example player save; runtime reports
 receive the current account's data from Guardian.

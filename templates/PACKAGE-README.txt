@@ -14,15 +14,17 @@ The archive has no enclosing directory. mods/guardian.dll is the Guardian
 loading method in this package. Disable any previous Guardian dbghelp.dll proxy
 installation before using it. Do not delete another mod's DLL by name alone.
 
-Includes Shroudtopia loader DLLs, app-local Microsoft Visual C++ x64 runtime,
+Includes only Guardian and Shroudtopia files: their DLLs,
 base JSON files, license notices and package-manifest.json with SHA-256 hashes.
-Requires Windows 10/Server 2016 or newer and an installed dedicated server.
+Requires Windows 10/Server 2016 or newer, an installed dedicated server and
+Microsoft Visual C++ Redistributable x64 (required by Shroudtopia).
+The Visual C++ runtime must be installed separately; its DLLs are not bundled.
 The game, Windows system DLLs and player saves are not included.
 Guardian templates, initial-character model and catalogs are embedded in its
 DLL. guardian/ storage is created at runtime. No Node.js or Save Editor needed.
 Other existing Shroudtopia mods are not enabled by this base config.
 
 Loader provenance and hashes: licenses/shroudtopia-README.md.
-Runtime terms: https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution
+
 Project: https://github.com/edtereza/enshrouded-guardian
 Original Guardian creator: Nicolas Ferreira.

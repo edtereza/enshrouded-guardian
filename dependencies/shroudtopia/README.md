@@ -15,10 +15,9 @@ They are pinned third-party binaries, not compiled by the Guardian workflow.
 | winmm.dll | 2519AB074597C39F9241456711370CAC907E86957833A7AE16705714CE6D7297 |
 
 The package script verifies these hashes and includes the upstream MIT license.
-It includes the unmodified app-local x64 Microsoft Visual C++ CRT DLLs from the
-build machine's Visual Studio redistributable directory, with hashes and file
-versions in package-manifest.json. It never copies DLLs from System32.
-Windows 10/Server 2016 or newer provides the Universal CRT.
+Only Guardian and Shroudtopia files are included in the archive. Shroudtopia
+requires Microsoft Visual C++ Redistributable x64, installed separately on the
+server. Microsoft runtime DLLs are not bundled.
 
 No Flight Mod, basics mod, server executable, credentials, player saves or
 existing server configuration is distributed.

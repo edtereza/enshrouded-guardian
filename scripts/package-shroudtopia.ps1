@@ -1,7 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$DllPath = 'target/x86_64-pc-windows-msvc/release/dbghelp.dll',
-    [string]$CrtDirectory
+    [string]$DllPath = 'target/x86_64-pc-windows-msvc/release/dbghelp.dll'
 )
 $ErrorActionPreference = 'Stop'
 if ($env:GITHUB_ACTIONS -ne 'true' -or !$env:GITHUB_RUN_ID) {
@@ -26,37 +25,30 @@ foreach ($name in $loaderHashes.Keys) {
         throw "Bundled loader hash mismatch: $name"
     }
 }
-if (!$CrtDirectory) {
-    $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
-    $vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-    if (!$vs) { throw 'Visual Studio C++ redistributable directory not found; specify -CrtDirectory' }
-    $CrtDirectory = Get-ChildItem "$vs/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT" -Directory |
-        Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
-}
-foreach ($name in @('msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll')) {
-    if (!(Test-Path -LiteralPath (Join-Path $CrtDirectory $name))) { throw "Missing x64 CRT: $name" }
-}
 # Unique staging avoids deleting any user-selected directory.
 $stage = Join-Path $root ("target/package-stage-" + [guid]::NewGuid().ToString('N'))
 $output = Join-Path $root 'target/distribution'
 New-Item -ItemType Directory -Force -Path "$stage/mods", "$stage/licenses", $output | Out-Null
 Copy-Item -LiteralPath $dll -Destination "$stage/mods/guardian.dll"
 foreach ($name in $loaderHashes.Keys) { Copy-Item "dependencies/shroudtopia/$name" $stage }
-Copy-Item "$CrtDirectory/*.dll" $stage
 Copy-Item templates/guardian.example.json "$stage/guardian.json"
 Copy-Item templates/shroudtopia.example.json "$stage/shroudtopia.json"
 Copy-Item templates/PACKAGE-README.txt "$stage/GUARDIAN-INSTALL.txt"
 Copy-Item LICENSE "$stage/licenses/Guardian-LICENSE.txt"
 Copy-Item dependencies/shroudtopia/LICENSE.txt "$stage/licenses/Shroudtopia-LICENSE.txt"
 Copy-Item dependencies/shroudtopia/README.md "$stage/licenses/shroudtopia-README.md"
-@'
-Microsoft Visual C++ runtime DLLs are Copyright Microsoft Corporation.
-Unmodified files from Visual Studio's x64 VC/Redist directory, distributed for
-use with this application under Visual Studio Distributable Code terms.
-They are not covered by Guardian's MIT license.
-https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution
-https://visualstudio.microsoft.com/license-terms/
-'@ | Set-Content "$stage/licenses/Microsoft-runtime-NOTICE.txt" -Encoding utf8
+$allowedFiles = @(
+    'mods/guardian.dll', 'shroudtopia.dll', 'winmm.dll',
+    'guardian.json', 'shroudtopia.json', 'GUARDIAN-INSTALL.txt',
+    'licenses/Guardian-LICENSE.txt', 'licenses/Shroudtopia-LICENSE.txt',
+    'licenses/shroudtopia-README.md'
+)
+$stagedFiles = @(Get-ChildItem $stage -File -Recurse)
+if ($stagedFiles.Count -ne $allowedFiles.Count) { throw 'Unexpected package file count' }
+foreach ($file in $stagedFiles) {
+    $relative = $file.FullName.Substring($stage.Length + 1).Replace('\', '/')
+    if ($relative -cnotin $allowedFiles) { throw "Unexpected package file: $relative" }
+}
 $files = @(Get-ChildItem $stage -File -Recurse | Sort-Object FullName | ForEach-Object {
     [ordered]@{
         path = $_.FullName.Substring($stage.Length + 1).Replace('\', '/')
@@ -73,6 +65,12 @@ Copy-Item -LiteralPath $dll -Destination "$output/guardian.dll" -Force
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $archive = [IO.Compression.ZipFile]::OpenRead($zip)
 try {
+    $entries = @($archive.Entries | Where-Object { !$_.FullName.EndsWith('/') })
+    if ($entries.Count -ne ($allowedFiles.Count + 1)) { throw 'Unexpected ZIP entry count' }
+    foreach ($entry in $entries) {
+        $relative = $entry.FullName.Replace('\', '/')
+        if ($relative -cnotin ($allowedFiles + 'package-manifest.json')) { throw "Unexpected ZIP entry: $relative" }
+    }
     foreach ($file in $files) {
         $entry = $archive.Entries | Where-Object { $_.FullName.Replace('\', '/') -eq $file.path }
         if (!$entry -or $entry.Length -ne $file.bytes) { throw "ZIP entry missing or incomplete: $($file.path)" }
