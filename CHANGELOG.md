@@ -4,7 +4,7 @@
 
 ## 3.0.6 — 2026-11-20
 
-- Artifact name is guardian; the complete server archive is named guardian-{version}.zip. Distribution is restricted to GitHub Actions artifacts (90-day retention), without automatic Release uploads.
+- Artifact name is guardian; the complete server archive is named guardian-{version}.zip. Packages are built exclusively in GitHub Actions, retained as artifacts for 90 days and automatically published to Releases for matching version tags.
 - Removed obsolete deployment installers and machine-specific build paths. Verified bundled loader hashes against official Shroudtopia 0.1.1.
 
 - GitHub Actions now tests/builds only the Shroudtopia adapter and packages guardian.dll, a root-extractable server ZIP and SHA-256 checksums. Version tags are checked against Cargo.toml.

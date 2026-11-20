@@ -64,8 +64,8 @@ mantém a própria cópia do que gravou por último de cada jogador — e essa c
 
 ## 🚀 Instalação
 
-1. Abra **Actions → execução concluída com sucesso → Artifacts → guardian**.
-2. Baixe o artefato e abra o ZIP guardian-{versão}.zip contido nele.
+1. Abra **[Releases](https://github.com/edtereza/enshrouded-guardian/releases/latest)**.
+2. Baixe guardian-{versão}.zip, gerado exclusivamente pela build do GitHub.
 3. Pare o servidor e faça backup das DLLs e configurações existentes.
 4. Extraia o pacote ao lado de enshrouded_server.exe e restaure/mescle seus JSONs.
 5. Inicie o servidor e confira guardian/guardian.log.
@@ -289,7 +289,7 @@ de agora mistura "o que o jogador trouxe" com "o que ele jogou depois".
 
 ## 🛠️ Compilando
 
-A distribuição é exclusiva pelo artefato guardian do **GitHub Actions**, com [log público](../../actions/workflows/build.yml).
+Os pacotes são gerados exclusivamente pelo **GitHub Actions**, com [log público](../../actions/workflows/build.yml), e disponibilizados em **Releases**.
 A build testa e compila somente a versão Shroudtopia. Compilações locais são apenas para desenvolvimento/testes.
 
 ```powershell
@@ -327,8 +327,9 @@ cargo build --locked --release --target x86_64-pc-windows-msvc --features shroud
 O GitHub Actions compila somente a versão Shroudtopia, executa os testes
 automatizados e gera guardian.dll, ZIP completo e SHA256SUMS.txt. Executa em
 push para main, pull requests e acionamento manual. Tags v<versão> devem coincidir
-com Cargo.toml. A distribuição ocorre somente em Actions → execução concluída
-com sucesso → Artifacts → guardian, com retenção de 90 dias. Não há publicação automática em Releases.
+com Cargo.toml e publicam automaticamente em Releases os arquivos gerados pelo
+GitHub após a build concluir com sucesso. O artefato guardian também fica
+disponível no Actions por 90 dias.
 
 Extraia guardian-<versão>.zip diretamente ao lado de
 enshrouded_server.exe, com o servidor parado. Inclui mods/guardian.dll, loader
@@ -342,6 +343,6 @@ dependencies/shroudtopia/README.md. O GitHub compila o Guardian, não esse loade
 
 O empacotamento por scripts/package-shroudtopia.ps1 é restrito ao GitHub Actions.
 O diretório redistribuível CRT x64 do Visual Studio é detectado automaticamente.
-O verificador de atualizações atual consulta Releases, não os artefatos do Actions.
+O verificador de atualizações consulta as versões estáveis publicadas em Releases.
 O template HTML incorporado não contém mais um save de jogador de exemplo.
 Os testes automatizados não substituem validação dentro do jogo.

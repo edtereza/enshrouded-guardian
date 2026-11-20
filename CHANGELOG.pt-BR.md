@@ -4,7 +4,7 @@
 
 ## 3.0.6 — 20/11/2026
 
-- Artefato chamado guardian; o pacote completo usa o nome guardian-{versão}.zip. Distribuição restrita aos artefatos do GitHub Actions (retenção de 90 dias), sem envio automático a Releases.
+- Artefato chamado guardian; o pacote completo usa o nome guardian-{versão}.zip. Pacotes gerados exclusivamente pelo GitHub Actions, mantidos como artefatos por 90 dias e publicados automaticamente em Releases para tags de versão correspondentes.
 - Removidos instaladores obsoletos e caminhos pessoais do helper de build. Hashes do loader conferidos contra Shroudtopia oficial 0.1.1.
 
 - GitHub Actions testa/compila somente Shroudtopia e gera guardian.dll, ZIP para a raiz do servidor e hashes SHA-256. Tags são conferidas contra Cargo.toml.
