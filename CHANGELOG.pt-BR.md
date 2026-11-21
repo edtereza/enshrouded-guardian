@@ -2,6 +2,12 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 3.1.0 — 20/11/2026
+
+- Fichas usam CSS, JavaScript, catálogos, arte e ícones compartilhados em guardian/assets/<versão>/. HTML mantém somente os dados do personagem e abre por file:// sem fetch.
+- Assets gerados uma vez por versão na thread de saves; regeneração offline usa a mesma estrutura. Copiar a pasta assets junto das fichas. Fichas antigas incorporadas continuam válidas até serem regeneradas.
+- Caminhos dos catálogos compatíveis com Live Map protegido por chave. Validação local: 27 testes Rust, 5 Node, 12 C++ do Live Map e teste HTTP isolado passaram (ficha, CSS, JS, imagens, chave, cache e bloqueio de travessia). Sem teste dentro do jogo.
+
 ## 3.0.9 — 20/11/2026
 
 - Conflito guardian.json/guardiao.json resolvido por merge recursivo de chaves normalizadas. Valores do arquivo com última modificação mais antiga prevalecem (legado vence empate); listas ficam inteiras.

@@ -6,7 +6,7 @@
 
 Server-side character management for **Enshrouded dedicated servers**.
 
-Guardian stores a reference copy of each player's character on the server, checks incoming characters against that copy, and provides access controls, first-join resets, backups, structured logs, and standalone character reports.
+Guardian stores a reference copy of each player's character on the server, checks incoming characters against that copy, and provides access controls, first-join resets, backups, structured logs, and static character reports.
 
 **This project is exclusively intended for dedicated servers running `enshrouded_server.exe`. It is not a client mod and is not intended for single-player or player-hosted co-op sessions.**
 
@@ -40,7 +40,7 @@ This version retains that foundation while adding the features below.
 - **Admin exceptions:** accept an administrator's incoming character as the new server reference, preserving the previous copy.
 - **Connection records:** with the whitelist disabled, record each connected player's SteamID64 and Steam display name.
 - **Reset announcements and reconnection:** broadcast the configured reset messages and request a non-ban kick after the timed sequence, waiting for the complete reset save to be sent.
-- **Static character reports:** generate `server_save.html` with equipment, backpack, skills, knowledge, and validation results. Images and data are embedded; no web server is needed.
+- **Static character reports:** generate `server_save.html` with equipment, backpack, skills, knowledge, and validation results. Images, CSS, JavaScript and catalogs are shared in guardian/assets/<version>/; character data stays in each HTML. No web server is needed.
 - **English storage:** configuration, technical logs, report fields, and generated filenames use English. The configured in-game announcements remain in Portuguese.
 - **Preserved history:** keep previous reference copies, rejected saves, original first-join characters, and administrator replacement backups.
 
@@ -293,6 +293,13 @@ The optional `scripts/build-shroudtopia.cmd` runs these commands in an MSVC deve
 - `templates/guardian.example.json`: an example configuration.
 - `templates/initial-character/`: the initial character model used for resets.
 - `data/save-editor/`: catalogs and embedded item icons.
+
+templates/assets/ holds the viewer CSS, JavaScript and catalog sources, also embedded into the DLL.
+At runtime these assets are written once under guardian/assets/<version>/, shared
+by all character sheets. Keep assets/ beside the account folders when copying
+sheets; a single server_save.html is no longer self-contained. Live Map 1.9.0
+serves these assets with its existing key protection. Old asset versions remain
+so older sheets keep working.
 
 Changing an embedded template requires recompiling the DLL. The server does not need a separate copy of `save-viewer.html`.
 

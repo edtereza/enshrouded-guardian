@@ -1,99 +1,109 @@
-//! Standalone viewer generated from the same static HTML edited in the project.
+//! Static reports with immutable, versioned assets shared by all accounts.
 use serde_json::{json, Value};
-use std::collections::HashMap;
-use std::io;
-use std::sync::OnceLock;
-
-const MARCADOR: &str = "<script id=\"guardian-data\" type=\"application/json\">";
-
-struct Modelo {
-    inicio: &'static str,
-    fim: &'static str,
-    metadados: String,
-    icones: HashMap<String, String>,
-}
-
-fn erro(mensagem: impl ToString) -> io::Error {
-    io::Error::new(io::ErrorKind::InvalidData, mensagem.to_string())
-}
-
-// Decode catalogs once on the existing save worker, never on the game thread.
-fn modelo() -> io::Result<&'static Modelo> {
-    static MODELO: OnceLock<Result<Modelo, String>> = OnceLock::new();
-    MODELO.get_or_init(|| {
-        let html = include_str!("../templates/save-viewer.html");
-        let (inicio, resto) = html.split_once(MARCADOR).ok_or("Missing viewer data marker")?;
-        let (dados, fim) = resto.split_once("</script>").ok_or("Incomplete viewer data")?;
-        let mut dados: Value = serde_json::from_str(dados).map_err(|e| e.to_string())?;
-        let objeto = dados.as_object_mut().ok_or("Invalid viewer catalogs")?;
-        // No snapshot from the developer's account is shipped in generated pages.
-        objeto.remove("reports");
-        objeto.remove("icons");
-        let metadados = serde_json::to_string(&dados).map_err(|e| e.to_string())?;
-        let icones = serde_json::from_str(include_str!("../data/save-editor/icons.json"))
-            .map_err(|e| e.to_string())?;
-        Ok(Modelo { inicio, fim, metadados, icones })
-    }).as_ref().map_err(erro)
-}
-
-// JSON is inside an HTML script element: escaping '<' prevents a name or other
-// received field from closing that element, including a literal </script>.
-fn json_seguro(texto: &str) -> String {
-    texto.replace('<', "\\u003c").replace('\u{2028}', "\\u2028").replace('\u{2029}', "\\u2029")
-}
-
-pub fn gerar(relatorio: &Value) -> io::Result<Vec<u8>> {
-    let modelo = modelo()?;
-    let mut icones = serde_json::Map::new();
-    let mut adicionar = |id: u64| {
-        let chave = id.to_string();
-        if let Some(imagem) = modelo.icones.get(&chave) {
-            icones.insert(chave, json!(imagem));
+use std::{io, path::Path, sync::OnceLock};
+const MARKER: &str = "<script id=\"guardian-data\" type=\"application/json\">";
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+struct Model { files: Vec<(String, Vec<u8>)> }
+fn error(message: impl ToString) -> io::Error { io::Error::new(io::ErrorKind::InvalidData, message.to_string()) }
+fn safe_json(text: &str) -> String { text.replace('<', "\\u003c").replace('\u{2028}', "\\u2028").replace('\u{2029}', "\\u2029") }
+fn decode_image(uri: &str) -> io::Result<Vec<u8>> {
+    let data = uri.strip_prefix("data:image/webp;base64,").ok_or_else(|| error("Unsupported embedded image"))?;
+    if data.len() % 4 != 0 { return Err(error("Invalid base64 length")); }
+    let mut output = Vec::with_capacity(data.len() * 3 / 4);
+    for (index, chunk) in data.as_bytes().chunks_exact(4).enumerate() {
+        let mut values = [0u32; 4];
+        for (i, byte) in chunk.iter().enumerate() {
+            values[i] = match byte {
+                b'A'..=b'Z' => (byte - b'A') as u32, b'a'..=b'z' => (byte - b'a' + 26) as u32,
+                b'0'..=b'9' => (byte - b'0' + 52) as u32, b'+' => 62, b'/' => 63,
+                b'=' if i >= 2 && index + 1 == data.len() / 4 => 0,
+                _ => return Err(error("Invalid base64 image")),
+            };
         }
-    };
-    for campo in ["equipment", "main", "extra"] {
-        for item in relatorio["character"][campo].as_array().into_iter().flatten() {
-            if let Some(id) = item["itemId"].as_u64() { adicionar(id); }
-            if let Some(socket) = item["socket"].as_str().filter(|s| s.len() == 10 && s.is_ascii()) {
-                let bytes: Option<Vec<u8>> = (0..8).step_by(2)
-                    .map(|i| u8::from_str_radix(&socket[i..i + 2], 16).ok()).collect();
-                if let Some(bytes) = bytes {
-                    adicionar(u32::from_le_bytes(bytes.try_into().unwrap()) as u64);
-                }
-            }
-        }
+        if chunk[2] == b'=' && chunk[3] != b'=' { return Err(error("Invalid base64 padding")); }
+        let bits = values[0] << 18 | values[1] << 12 | values[2] << 6 | values[3];
+        output.push((bits >> 16) as u8);
+        if chunk[2] != b'=' { output.push((bits >> 8) as u8); }
+        if chunk[3] != b'=' { output.push(bits as u8); }
     }
-    let dinamicos = json!({"reports": [{"label": "Server save", "data": relatorio}], "icons": icones});
-    let dinamicos = serde_json::to_string(&dinamicos)?;
-    // Join the dynamic report and icons with immutable editor catalogs without
-    // cloning the entire icon library for every save.
-    let dados = format!("{},{}", &dinamicos[..dinamicos.len() - 1], &modelo.metadados[1..]);
-    let mut html = Vec::with_capacity(modelo.inicio.len() + modelo.fim.len() + dados.len());
-    html.extend_from_slice(modelo.inicio.as_bytes());
-    html.extend_from_slice(MARCADOR.as_bytes());
-    html.extend_from_slice(json_seguro(&dados).as_bytes());
-    html.extend_from_slice(b"</script>");
-    html.extend_from_slice(modelo.fim.as_bytes());
-    Ok(html)
+    Ok(output)
 }
-
+fn model() -> io::Result<&'static Model> {
+    static MODEL: OnceLock<Result<Model, String>> = OnceLock::new();
+    MODEL.get_or_init(|| prepare().map_err(|e| e.to_string())).as_ref().map_err(error)
+}
+fn prepare() -> io::Result<Model> {
+    let mut data: Value = serde_json::from_str(include_str!("../templates/assets/catalogs.json"))?;
+    let mut files = vec![("viewer.css".into(), include_bytes!("../templates/assets/viewer.css").to_vec()),
+        ("viewer.js".into(), include_bytes!("../templates/assets/viewer.js").to_vec())];
+    let icons: Value = serde_json::from_str(include_str!("../data/save-editor/icons.json"))?;
+    let mut urls = serde_json::Map::new();
+    for (key, uri) in icons.as_object().ok_or_else(|| error("Invalid icon catalog"))? {
+        key.parse::<u64>().map_err(error)?;
+        let path = format!("images/item-{key}.webp");
+        files.push((path.clone(), decode_image(uri.as_str().ok_or_else(|| error("Invalid icon"))?)?));
+        urls.insert(key.clone(), json!(path));
+    }
+    data["icons"] = Value::Object(urls);
+    for (key, uri) in data["ui"].as_object_mut().ok_or_else(|| error("Invalid UI catalog"))? {
+        let hex: String = key.as_bytes().iter().map(|b| format!("{b:02x}")).collect();
+        let path = format!("images/ui-{hex}.webp");
+        files.push((path.clone(), decode_image(uri.as_str().ok_or_else(|| error("Invalid UI image"))?)?));
+        *uri = json!(path);
+    }
+    let css = data.as_object_mut().unwrap().remove("cssImages").ok_or_else(|| error("Missing CSS images"))?;
+    for (key, uri) in css.as_object().ok_or_else(|| error("Invalid CSS images"))? {
+        if !key.bytes().all(|c| c.is_ascii_alphanumeric() || c == b'-') { return Err(error("Invalid CSS image name")); }
+        files.push((format!("images/{key}.webp"), decode_image(uri.as_str().ok_or_else(|| error("Invalid CSS image"))?)?));
+    }
+    let catalogs = format!("window.guardianCatalogs={};\n{}", safe_json(&serde_json::to_string(&data)?), include_str!("../templates/assets/catalog-paths.js"));
+    files.push(("catalogs.js".into(), catalogs.into_bytes()));
+    Ok(Model { files })
+}
+fn assets(root: &Path) -> io::Result<()> {
+    let directory = root.join("assets").join(VERSION);
+    if std::fs::read(directory.join("ready")).is_ok_and(|v| v == VERSION.as_bytes()) { return Ok(()); }
+    std::fs::create_dir_all(directory.join("images"))?;
+    for (name, bytes) in &model()?.files { crate::logging::gravar_atomico(&directory.join(name), bytes)?; }
+    crate::logging::gravar_atomico(&directory.join("ready"), VERSION.as_bytes())
+}
+pub fn gerar(root: &Path, report: &Value) -> io::Result<Vec<u8>> {
+    assets(root)?;
+    let template = include_str!("../templates/save-viewer.html");
+    let (start, rest) = template.split_once(MARKER).ok_or_else(|| error("Missing report marker"))?;
+    let (_, end) = rest.split_once("</script>").ok_or_else(|| error("Incomplete report marker"))?;
+    let data = safe_json(&serde_json::to_string(&json!({"reports":[{"label":"Server save","data":report}]}))?);
+    Ok(format!("{start}{MARKER}{data}</script>{end}").replace("__GUARDIAN_ASSET_BASE__", &format!("../assets/{VERSION}")).into_bytes())
+}
 #[cfg(test)]
-mod testes {
+mod tests {
     use super::*;
-
     #[test]
-    fn pagina_contem_apenas_o_save_atual_e_escapa_dados_recebidos() {
-        let relatorio = json!({"steam_id_64": "123", "steam_account_name": "</script><script>teste</script>",
-            "origin": "server", "character": {"level": 1, "equipment": [{"itemId": 3972122124u64}]}});
-        let html = String::from_utf8(gerar(&relatorio).unwrap()).unwrap();
-        let dados = html.split_once(MARCADOR).unwrap().1.split_once("</script>").unwrap().0;
-        assert!(!dados.contains('<'));
-        let dados: Value = serde_json::from_str(dados).unwrap();
-        assert_eq!(dados["reports"].as_array().unwrap().len(), 1);
-        assert_eq!(dados["reports"][0]["data"], relatorio);
-        assert!(dados["icons"]["3972122124"].as_str().unwrap().starts_with("data:image/webp;base64,"));
-        assert!(!html.contains("fetch("));
-        assert!(!html.contains("setInterval("));
-        assert!(!html.contains("76561199244298543"));
+    fn shared_assets_are_external_reused_and_reports_remain_safe() {
+        let root = std::env::temp_dir().join(format!("guardian-assets-{}-{}", std::process::id(), std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+        let report = json!({"steam_id_64":"123","steam_account_name":"</script><script>bad</script>","character":{"equipment":[{"itemId":3972122124u64}]}});
+        let html = String::from_utf8(gerar(&root, &report).unwrap()).unwrap();
+        let payload = html.split_once(MARKER).unwrap().1.split_once("</script>").unwrap().0;
+        assert!(!payload.contains('<'));
+        assert_eq!(serde_json::from_str::<Value>(payload).unwrap()["reports"][0]["data"], report);
+        assert!(!html.contains("data:image"));
+        assert!(!html.contains("<style>"));
+        assert!(html.contains(&format!("../assets/{VERSION}/viewer.js")));
+        let directory = root.join("assets").join(VERSION);
+        let icon = std::fs::read(directory.join("images/item-3972122124.webp")).unwrap();
+        assert_eq!(&icon[..4], b"RIFF");
+        let js = std::fs::read_to_string(directory.join("catalogs.js")).unwrap();
+        assert!(!js.contains("data:image"));
+        assert!(!js.contains("steam_account_name"));
+        let css = directory.join("viewer.css");
+        let modified = std::fs::metadata(&css).unwrap().modified().unwrap();
+        gerar(&root, &json!({"steam_id_64":"456"})).unwrap();
+        assert_eq!(std::fs::metadata(&css).unwrap().modified().unwrap(), modified);
+        assert!(html.len() < 10000);
+        std::fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn bad_embedded_images_fail_without_silent_corruption() {
+        for data in ["garbage", "data:image/webp;base64,=AAA", "data:image/webp;base64,AA=A", "data:image/webp;base64,AA!"] { assert!(decode_image(data).is_err()); }
     }
 }

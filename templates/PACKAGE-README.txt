@@ -27,7 +27,11 @@ Standard ZIP: install Microsoft Visual C++ Redistributable x64 separately.
 Full ZIP: includes the app-local Visual C++ runtime and its license notice.
 The game, Windows system DLLs and player saves are not included.
 Guardian templates, initial-character model and catalogs are embedded in its
-DLL. guardian/ storage is created at runtime. No Node.js or Save Editor needed.
+DLL. guardian/ storage is created at runtime. Shared viewer assets are exported
+to guardian/assets/{version}/ once per version. When copying character sheets,
+copy assets/ too and keep it beside the SteamID directories. Live Map 1.9.0
+serves these shared files with its existing access-key protection.
+No Node.js or Save Editor needed.
 Other existing Shroudtopia mods are not enabled by this base config.
 
 Loader provenance and hashes: licenses/shroudtopia-README.md.

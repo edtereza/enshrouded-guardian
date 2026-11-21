@@ -2,6 +2,12 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 3.1.0 — 2026-11-20
+
+- Character sheets now reference shared, versioned guardian/assets/<version>/ files for CSS, JavaScript, catalogs, UI artwork and item images. HTML retains only the current character data and works over file:// without fetch.
+- Assets are generated once per version on the save worker; offline regeneration uses the same structure. Keep the assets folder when copying sheets. Existing generated standalone sheets remain valid until regenerated.
+- Shared catalog paths support authenticated Live Map serving. Local validation: 27 Rust tests, 5 Node tests, 12 Live Map C++ tests and isolated HTTP checks passed (sheet, CSS, JS, images, key enforcement, caching and traversal). No in-game test.
+
 ## 3.0.9 — 2026-11-20
 
 - Resolve guardian.json/guardiao.json coexistence by recursively merging normalized configuration keys. Older last-modified values win (legacy file wins ties); arrays remain whole.

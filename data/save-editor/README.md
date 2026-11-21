@@ -7,9 +7,10 @@ Copyright (c) 2026 Nicolas Ferreira. MIT license, reproduced in the repository
 LICENSE. Catalog updates must be checked against tests/fixtures/save-editor.json,
 whose expected models were obtained with the source editor parser.
 
-icons.json contains the editor's item icons as embedded WebP data URIs. The HTML
-generator selects only the current character's item icons for each output page.
-The UI artwork and catalogs in templates/save-viewer.html are from the same editor.
+icons.json contains the editor's item icons as embedded WebP data URIs. The viewer
+generator decodes these into versioned shared WebP files under guardian/assets/.
+All sheets and Live Map use the same assets instead of embedding images per page.
+The UI artwork and catalogs in templates/assets/ are from the same editor.
 
 templates/initial-character/A.bin and K.bin are a fresh level-1/zero-XP server save captured
 locally (empty inventories, no purchased skills, starting pants, three default

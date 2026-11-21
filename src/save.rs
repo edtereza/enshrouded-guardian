@@ -401,7 +401,7 @@ fn persistir(raiz: &std::path::Path, c: &Captura) -> std::io::Result<std::path::
     if c.origem != "client" {
         // Keep the last server view when a client submits another entry save.
         // HTML failures must not prevent the JSON report from being saved.
-        if let Err(erro) = crate::save_html::gerar(&valor)
+        if let Err(erro) = crate::save_html::gerar(raiz, &valor)
             .and_then(|html| logging::gravar_atomico(&dir.join("server_save.html"), &html))
         {
             logging::log_arquivo(&format!("Save Editor HTML {}: {erro}", c.sid));

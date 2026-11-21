@@ -119,24 +119,14 @@ function migrate(root) {
   }
 
   // Regenerate standalone pages with the English template and current report.
-  const template = fs.readFileSync(path.join(__dirname, '../templates/save-viewer.html'), 'utf8');
-  const pattern = /<script id="guardian-data" type="application\/json">([\s\S]*?)<\/script>/;
-  const base = JSON.parse(template.match(pattern)[1]);
-  const icons = require('../data/save-editor/icons.json');
+  const { render } = require('./viewer-assets.cjs');
   for (const account of fs.readdirSync(data, { withFileTypes: true })) {
     if (!account.isDirectory() || !/^\d+$/.test(account.name)) continue;
     const directory = path.join(data, account.name);
     const reportFile = path.join(directory, 'server_save.json');
     if (!fs.existsSync(reportFile)) continue;
     const report = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
-    const bundle = { ...base, reports: [{ label: 'Server save', data: report }], icons: {} };
-    for (const field of ['equipment', 'main', 'extra']) {
-      for (const item of report.character?.[field] || []) {
-        if (icons[item.itemId]) bundle.icons[item.itemId] = icons[item.itemId];
-      }
-    }
-    write(path.join(directory, 'server_save.html'), template.replace(pattern, () =>
-      '<script id="guardian-data" type="application/json">' + JSON.stringify(bundle).replace(/</g, '\\u003c') + '</script>'));
+    write(path.join(directory, 'server_save.html'), render(data, report));
   }
   for (const name of ['guardian.log', 'events.jsonl']) fs.closeSync(fs.openSync(path.join(data, name), 'a'));
   const version = fs.readFileSync(path.join(__dirname, '../Cargo.toml'), 'utf8').match(/^version\s*=\s*"([^"]+)"/m)[1];

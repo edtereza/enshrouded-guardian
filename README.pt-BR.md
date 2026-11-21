@@ -364,3 +364,13 @@ Chaves antigas são convertidas antes do merge. Ambos os originais ficam em
 guardian/legacy-backup/config/merge-<n>/ e somente guardian.json permanece ativo.
 JSON inválido ou raiz que não seja objeto interrompe a migração sem alterar os
 dois arquivos de configuração. O helper offline aplica as mesmas regras.
+
+
+### Assets compartilhados das fichas (3.1.0)
+
+CSS, JavaScript, catálogos e imagens ficam em guardian/assets/<versão>/ e são
+gerados uma vez por versão na thread de saves. O HTML mantém os dados do
+personagem e continua estático, abrindo localmente sem servidor web. Ao copiar
+fichas, leve também assets/, preservando sua posição ao lado das pastas SteamID.
+O Live Map 1.9.0 serve esses mesmos arquivos mantendo a proteção por chave.
+Versões anteriores dos assets não são removidas, para preservar fichas antigas.
