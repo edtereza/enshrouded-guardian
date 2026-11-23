@@ -2,6 +2,13 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 4.1.0 — 23/11/2026
+
+- Backend nativo de hardcore, hooks de morte, simulação, reset e teleporte incorporados ao Guardian; dependências fixadas SafetyHook/Zydis/Zycore e licenças incluídas na build. Removida dependência de mod complementar; ponte opcional ABI 2 disponível.
+- Equipamentos transferidos para a lápide vinculada por transação nativa da morte, preservando a identidade persistente dos itens. Sem vínculo ou espaço verificável, equipamentos são mantidos e o reset aguarda.
+- Entradas com reset pendente restauram a referência intacta até confirmar a transferência nativa. Pacote usa bootDelay=0 para registro antecipado.
+- Validação automatizada inclui testes Rust, testes nativos de layouts/exceções/plano de transferência e probes offline de patterns/pontos de chamada. A transferência ainda depende de confirmação em execução no servidor alvo.
+
 ## 4.0.0 — 23/11/2026
 
 - Removida a opção de configuração da consulta de atualizações e seu alias legado: a verificação passa a ocorrer sempre na inicialização e periodicamente em segundo plano. Campos antigos não desativam mais a consulta.

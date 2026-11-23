@@ -35,7 +35,7 @@ This version retains that foundation while adding the features below.
 ## Features
 
 - **Server-authoritative characters:** restore the stored reference when a regular player joins with a different character.
-- **Optional hardcore:** reset level, XP, inventory and skills at respawn after death, preserving knowledge and returning to the initial spawn without disconnecting. Disabled by default.
+- **Optional hardcore:** move equipped items into the death tombstone and reset level, XP, inventory and skills at respawn, preserving knowledge and returning to the initial spawn without disconnecting. Disabled by default.
 - **First-join reset:** accounts without a stored reference start at level 1 with zero XP, empty inventories, no purchased skills, and starting pants. Appearance is preserved, and the incoming save is backed up before replacement.
 - **Optional SteamID64 whitelist:** control which accounts may join.
 - **Admin exceptions:** accept an administrator's incoming character as the new server reference, preserving the previous copy.
@@ -52,7 +52,7 @@ Hardcore applies a progression penalty after each death. The reset runs when the
 
 Add `"hardcore": true` as a top-level setting in the existing `guardian.json` beside the dedicated-server executable, keeping your other settings. The default is `false`. Set it back to `false` to disable the mode, and restart the server after changing this setting.
 
-Hardcore requires a compatible native respawn backend on the dedicated server. Without it, live death resets are unavailable. No client modification or EMF runtime is required.
+The native respawn backend is built into Guardian 4.1.0 and runs independently of other mods. Use the Shroudtopia build and keep bootDelay=0 so its native program registers before world initialization. No client modification or EMF runtime is required.
 
 ### What happens after a death
 
@@ -64,10 +64,13 @@ Hardcore requires a compatible native respawn backend on the dedicated server. W
 | --- | --- |
 | Level | Reset to 1 |
 | XP and pending XP | Reset to 0 |
-| Inventory and equipment | Removed from the character |
+| Equipped items | Moved to the native tombstone before the reset, preserving their existing item entities |
+| Remaining character inventory | Cleared after the equipment transfer |
 | Unlocked skills | Cleared, including verified skill effects |
 | Knowledge | Preserved |
 | Position | Teleported to the world's initial `StartLocation` spawn point |
+
+Equipment is moved through a native inventory transaction into the tombstone identified by the game's own committed transfer from that dead player. Names and proximity are never used for this link. If no verified tombstone is available or it has insufficient room, equipment is retained and the reset waits. Guardian does not create a replacement tombstone when the game creates none.
 
 The rule also applies to administrators. Shared base chests are not emptied. Guardian verifies the native reset and teleport, then completes the operation after the next successful character save. The death reset does not use the disconnect sequence associated with a first join from another world.
 
@@ -95,6 +98,7 @@ Players do **not** need EMF, Shroudtopia, or a Guardian client component. The Sa
 - A current stable Rust toolchain with the `x86_64-pc-windows-msvc` target and Cargo.
 - Microsoft Visual Studio Build Tools with the C++ toolchain.
 - A Windows SDK providing the required headers and libraries.
+- CMake 3.28+ and Ninja for the integrated C++23 native backend. SafetyHook v0.7.0, Zydis and Zycore are fetched during the build and linked statically; their notices are included in the package.
 - For the Shroudtopia adapter, the MSVC C++ compiler used by the `cc` build dependency.
 
 Cargo resolves these dependencies from `Cargo.toml` and `Cargo.lock`:
@@ -183,7 +187,7 @@ Use complete SteamID64 values **as strings**, for example `"76561199244298543"`.
 | --- | --- |
 | `mode: "enforce"` | Applies character reference and first-join reset rules. |
 | `mode: "observe"` | Logs regular character differences without replacing or resetting them. |
-| `hardcore` | Defaults to `false`. When `true`, resets the character at respawn after a confirmed death; preserves knowledge. Applies to administrators too and requires the native backend. |
+| `hardcore` | Defaults to `false`. When `true`, resets the character at respawn after a confirmed death; preserves knowledge. Applies to administrators too using the integrated native backend. |
 | `whitelist.enabled` | When true, only accounts in `whitelist.players` may join, including administrators. Applies in observe mode too. |
 | `whitelist.players` | Allowed SteamID64 strings. With the whitelist disabled, connections are recorded without automatically changing this list. |
 | `admins` | SteamID64 strings whose incoming character replaces the server reference, without a first-join reset or reset kick. This does not grant native game administrator permissions. |

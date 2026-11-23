@@ -229,6 +229,7 @@ pub fn instalar() -> bool {
             trocar_destino(ins, 5, destino)
         });
         logging::log_arquivo(if chat_instalado { "First join chat hook installed." } else { "First join chat hook unavailable for this build." });
+        crate::hardcore::require_manager_hook(chat_instalado);
         let reset_instalado = chat_instalado && ponto_reset.is_some_and(|(ins, receber, kick)| {
             chat::iniciar_reset(receber, kick);
             let destino = salto(bloco + 64, chat::receber_reset as *const () as usize);

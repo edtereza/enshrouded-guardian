@@ -16,12 +16,29 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
+      - name: Enable Visual Studio CMake and Ninja
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
+          $vs = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          foreach ($tool in @('Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin', 'Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja')) {
+            $path = Join-Path $vs $tool
+            if (!(Test-Path $path)) { throw "Missing native build tools: $path" }
+            $path >> $env:GITHUB_PATH
+          }
       - name: Test Shroudtopia adapter
         run: cargo test --locked --target x86_64-pc-windows-msvc --features shroudtopia
       - name: Test offline configuration migration
         run: node --test tests/config-migration.cjs tests/viewer-assets.cjs
       - name: Build Shroudtopia adapter only
         run: cargo build --locked --release --target x86_64-pc-windows-msvc --features shroudtopia
+      - name: Verify standalone Guardian DLL metadata and native exports
+        shell: pwsh
+        run: |
+          $test = Get-ChildItem target/x86_64-pc-windows-msvc/release/build -Filter guardian_dll_test.exe -Recurse | Select-Object -First 1
+          if (!$test) { throw 'Native DLL verifier missing' }
+          & $test.FullName (Resolve-Path target/x86_64-pc-windows-msvc/release/dbghelp.dll)
+          if ($LASTEXITCODE -ne 0) { throw 'Standalone Guardian DLL validation failed' }
       - name: Package DLL and complete server ZIP
         shell: pwsh
         run: ./scripts/package-shroudtopia.ps1

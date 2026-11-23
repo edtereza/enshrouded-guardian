@@ -477,14 +477,14 @@ pub unsafe fn entrada(st: *mut u8) -> bool {
             let result = (|| -> Result<Copia, String> {
                 if !crate::hardcore::ready_for_join(sid) { return Err("Hardcore backup is still pending; retry joining shortly".into()); }
                 let reference = e.copias.get(&sid).cloned().or_else(|| crate::hardcore::backup_reference(sid)).ok_or("Missing hardcore server reference")?;
-                let (reset, knowledge, knowledge_state) = crate::save::personagem_hardcore(&reference.a, &reference.k, reference.k_estado)?;
+                let (reset, knowledge, knowledge_state) = (reference.a, reference.k, reference.k_estado);
                 salvar_referencia(&dir, &reset, &knowledge, knowledge_state, sid, handle, &e.build, "hardcore").map_err(|e| e.to_string())?;
                 gravar_array(st.add(0x18), &reset, 1).and_then(|_| gravar_k(st, &knowledge, knowledge_state)).map_err(str::to_owned)?;
-                if ler_array(st.add(0x18), 1) != reset || ler_k(st).as_deref() != Some(&knowledge[..]) { return Err("Hardcore join reset did not stick".into()); }
+                if ler_array(st.add(0x18), 1) != reset || ler_k(st).as_deref() != Some(&knowledge[..]) { return Err("Hardcore server-reference restoration did not stick".into()); }
                 Ok(Copia { a:reset, k:knowledge, k_estado:knowledge_state, build:e.build.clone(), desatualizada:false })
             })();
             match result {
-                Ok(copy) => { e.copias.insert(sid, copy); e.forcar_completo.insert(handle); logging::log(&format!("Hardcore {sid}: pending reset restored on join; native start-point teleport still pending.")); return false; }
+                Ok(copy) => { e.copias.insert(sid, copy); e.forcar_completo.insert(handle); logging::log(&format!("Hardcore {sid}: pending server reference restored on join; native equipment transfer, reset and start-point teleport still pending.")); return false; }
                 Err(error) => { e.rejected.insert(handle); logging::log_entrada(&format!("Hardcore {sid}: entry denied: {error}")); return true; }
             }
         }

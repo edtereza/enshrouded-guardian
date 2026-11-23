@@ -54,7 +54,7 @@ mantém a própria cópia do que gravou por último de cada jogador — e essa c
 
 | | |
 |---|---|
-| 💀 **Hardcore opcional** | após morrer, renasce no nível 1, sem XP, itens ou skills, mantendo conhecimento e voltando ao ponto inicial sem desconexão; desativado por padrão |
+| 💀 **Hardcore opcional** | após morrer, transfere os equipamentos para a lápide e renasce no nível 1, sem XP, itens ou skills, mantendo conhecimento e voltando ao ponto inicial sem desconexão; desativado por padrão |
 | 🛡️ **Servidor manda** | na entrada, compara o personagem que chegou com a última cópia do servidor e, se divergirem, devolve a cópia do servidor |
 | 🎒 **Nada vem de fora** | equipamento, nível, árvore de habilidades, inventário, descobertas e receitas valem o que o servidor viu |
 | 🔍 **Prova de tudo** | guarda o save recusado **e** a cópia de referência daquele instante, para comparar sem conclusão errada |
@@ -71,7 +71,7 @@ O modo hardcore aplica uma penalidade de progressão a cada morte. O reset ocorr
 
 Adicione `"hardcore": true` no nível principal do `guardian.json` existente, ao lado do executável do servidor dedicado, mantendo as outras configurações. O padrão é `false`. Para desativar, altere novamente para `false`. Reinicie o servidor após mudar essa configuração.
 
-O hardcore requer um backend nativo de renascimento compatível no servidor dedicado. Sem ele, o reset por morte durante a sessão fica indisponível. Não exige alteração no cliente nem runtime EMF.
+O backend nativo está incorporado ao Guardian 4.1.0 e funciona sem depender de outros mods. Use a versão Shroudtopia e mantenha bootDelay=0 para registrar o programa antes da inicialização do mundo. Não exige alteração no cliente nem runtime EMF.
 
 ### O que acontece após uma morte
 
@@ -83,10 +83,13 @@ O hardcore requer um backend nativo de renascimento compatível no servidor dedi
 | --- | --- |
 | Nível | Retorna ao nível 1 |
 | XP e XP pendente | Zerados |
-| Inventário e equipamentos | Removidos do personagem |
+| Itens equipados | Transferidos à lápide nativa antes do reset, preservando as entidades dos itens |
+| Restante do inventário do personagem | Esvaziado após a transferência dos equipamentos |
 | Skills desbloqueadas | Removidas, incluindo os efeitos de skills verificados |
 | Conhecimento | Preservado |
 | Posição | Teleporte ao ponto inicial `StartLocation` do mundo |
+
+A transferência usa uma transação nativa e a lápide vinculada por uma movimentação de inventário confirmada pelo próprio jogo a partir daquele jogador morto. Nome e proximidade não autorizam esse vínculo. Se não houver lápide verificada ou espaço suficiente, os equipamentos são mantidos e o reset aguarda. O Guardian não cria uma lápide substituta quando o jogo não cria nenhuma.
 
 A regra também vale para administradores. Baús compartilhados da base não são esvaziados. O Guardian verifica o reset e o teleporte nativos e conclui a operação após a próxima gravação bem-sucedida do personagem. O reset por morte não usa a sequência de desconexão da primeira entrada com personagem de outro mundo.
 
@@ -155,7 +158,7 @@ Crie `guardian.json` ao lado de `enshrouded_server.exe`. Configuração completa
 | Campo | Funcionamento |
 | --- | --- |
 | `mode` | `enforce` aplica a referência do servidor e o reset inicial; `observe` apenas registra divergências comuns. |
-| `hardcore` | `false` por padrão. Com `true`, reseta no renascimento após morte confirmada, preservando conhecimento. Também vale para administradores e requer o backend nativo. |
+| `hardcore` | `false` por padrão. Com `true`, reseta no renascimento após morte confirmada, preservando conhecimento. Também vale para administradores usando o backend nativo integrado. |
 | `whitelist.enabled` | Com `true`, permite somente as contas de `players`, inclusive administradores e no modo observar. |
 | `whitelist.players` | Lista de SteamID64 completos como textos. Desativar a whitelist não adiciona conexões à lista. |
 | `admins` | Lista de SteamID64 cujo personagem recebido substitui a referência, sem reset de primeira entrada. Não concede permissões nativas de administrador do jogo nem isenção do hardcore. |

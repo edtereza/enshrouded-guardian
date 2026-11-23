@@ -38,3 +38,8 @@ Loader provenance and hashes: licenses/shroudtopia-README.md.
 
 Project: https://github.com/edtereza/enshrouded-guardian
 Original Guardian creator: Nicolas Ferreira.
+
+HARDCORE
+Guardian includes its native hardcore backend; no companion map mod is required.
+Use bootDelay=0 in shroudtopia.json. Equipped items move to a verified native death tombstone before reset. If no verified tombstone or space is available, equipment remains and reset waits.
+Native dependency/research notices are in licenses/Native-hardcore-NOTICES.txt.

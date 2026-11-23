@@ -1,5 +1,5 @@
-//! Hardcore coordination. Engine memory is touched only by Live Map's verified
-//! native backend. This module owns identity checks, backups and save authority.
+//! Hardcore coordination and the integrated native backend. This module owns
+//! identity checks, backups and save authority; native/ owns verified engine calls.
 use crate::{access, logging, state};
 use serde_json::json;
 use std::{
@@ -11,6 +11,40 @@ use std::{
     },
     time::{SystemTime, UNIX_EPOCH},
 };
+#[cfg(feature = "shroudtopia")]
+extern "C" {
+    fn guardian_native_initialize(image: *const u8) -> bool;
+    fn guardian_native_manager(manager: usize);
+    fn guardian_native_death(handle: u32, account: u64);
+}
+#[no_mangle]
+pub extern "C" fn GuardianNativeBackendVersion() -> u32 {
+    if cfg!(feature = "shroudtopia") {
+        2
+    } else {
+        0
+    }
+}
+#[no_mangle]
+pub extern "C" fn GuardianNativeManager(manager: usize) {
+    #[cfg(feature = "shroudtopia")]
+    unsafe {
+        guardian_native_manager(manager);
+    }
+}
+#[no_mangle]
+pub extern "C" fn GuardianNativeDeath(handle: u32, account: u64) {
+    #[cfg(feature = "shroudtopia")]
+    unsafe {
+        guardian_native_death(handle, account);
+    }
+}
+#[no_mangle]
+pub unsafe extern "C" fn GuardianHardcoreLog(message: *const std::ffi::c_char) {
+    if !message.is_null() {
+        logging::log(&std::ffi::CStr::from_ptr(message).to_string_lossy());
+    }
+}
 static ENABLED: AtomicBool = AtomicBool::new(false);
 static BACKEND: AtomicBool = AtomicBool::new(false);
 static NEXT: AtomicU64 = AtomicU64::new(1);
@@ -149,6 +183,15 @@ pub fn initialize() {
         logging::log("Hardcore requested but unavailable: unverified native server layout.");
         return;
     }
+    #[cfg(feature = "shroudtopia")]
+    if !unsafe {
+        guardian_native_initialize(windows_sys::Win32::System::LibraryLoader::GetModuleHandleW(
+            core::ptr::null(),
+        ) as *const u8)
+    } {
+        logging::log("Hardcore unavailable: integrated native backend refused initialization.");
+        return;
+    }
     let (tx, rx) = mpsc::channel();
     if std::thread::Builder::new()
         .name("guardian-hardcore-backups".into())
@@ -198,8 +241,13 @@ pub fn initialize() {
     }
     ENABLED.store(true, Ordering::Release);
     logging::log(
-        "Hardcore enabled: native Live Map respawn backend required. No disconnect/kick is used.",
+        "Hardcore enabled: integrated Guardian native respawn backend. No disconnect/kick is used.",
     );
+}
+pub fn require_manager_hook(available: bool) {
+    if !available && ENABLED.swap(false, Ordering::AcqRel) {
+        logging::log("Hardcore disabled: the verified connection hook required by the integrated backend is unavailable.");
+    }
 }
 pub fn rebind(sid: u64, handle: u32, account: u64) {
     with_pending(|all| {

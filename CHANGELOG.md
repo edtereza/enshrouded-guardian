@@ -2,6 +2,13 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 4.1.0 — 2026-11-23
+
+- Embed native hardcore simulation, death-callsite hooks, respawn/reset and teleport code into Guardian; integrate pinned SafetyHook/Zydis/Zycore build dependencies and license notices. Remove the companion-mod runtime requirement and expose an optional ABI-2 telemetry bridge.
+- Move equipped items to the exact native death tombstone through a committed inventory transaction, preserving persistent item identity. Retain equipment and defer reset when grave linkage or capacity cannot be verified.
+- Pending joins restore the server reference intact until native equipment transfer can be confirmed. Set packaged bootDelay=0 for early program registration.
+- Automated validation includes Rust tests, native layout/exception/transfer-planning tests and offline executable pattern/callsite probes. Equipment transfer still requires runtime confirmation on the target server.
+
 ## 4.0.0 — 2026-11-23
 
 - Remove the update-check configuration toggle and its legacy alias: version checks always run at startup and periodically in the background. Old toggle fields no longer disable checking.

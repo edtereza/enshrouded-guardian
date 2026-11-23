@@ -49,6 +49,7 @@ unsafe extern "system" fn avaliar(
         if !conexao.is_null() {
             let nome = nome_da_conexao(conexao);
             state::registrar_conexao(ler(conexao, 0), nome.as_deref(), ler(conexao, 0x48));
+            crate::hardcore::GuardianNativeManager(servidor as usize);
         }
         agendar_reset(conexao);
         anunciar(postar, ler(servidor, 0x60), conexao);
