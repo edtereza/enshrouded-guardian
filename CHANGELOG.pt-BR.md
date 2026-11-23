@@ -2,6 +2,30 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 4.0.0 — 23/11/2026
+
+- Removida a opção de configuração da consulta de atualizações e seu alias legado: a verificação passa a ocorrer sempre na inicialização e periodicamente em segundo plano. Campos antigos não desativam mais a consulta.
+- Consulta somente informativa: anuncia novas versões, sem baixar/instalar binários de atualização nem enviar saves. Removido o comportamento anterior que permitia desativá-la.
+- Campo removido dos dois READMEs e cobertura de campos desconhecidos preservada nos testes de migração. Validação automatizada: testes Rust/Node e compilação local da DLL Shroudtopia; sem teste dentro do jogo.
+
+## 3.3.1 — 23/11/2026
+
+- Novos backups e registros de conclusão do hardcore usam guardian/<SteamID64>/hardcore/history/<token>/; snapshots de referência na reconexão usam a mesma pasta history. Backups antigos em hardcore-history continuam legíveis, sem mover nem sobrescrever arquivos.
+- Ambos os READMEs atualizados. Validação automatizada cobre novo caminho, leitura legada e preservação; sem teste dentro do jogo.
+
+## 3.3.0 — 23/11/2026
+
+- Anúncios de primeira entrada e reset de personagem externo enviados em português e inglês na mesma linha. Preservados os destinatários e os tempos das notificações/kick; o rótulo genérico também é traduzido na parte inglesa.
+- Documentação do hardcore movida para abaixo de Features, configuração completa e descrição da flag incluídas, nota sobre armazenamento em inglês e referências nominais ao mapa removidas dos READMEs, e anúncios bilíngues documentados.
+- Validação: testes automatizados Rust de mensagens/destinatários/tempos e compilação local da DLL Shroudtopia; sem novo teste dentro do jogo.
+
+## 3.2.0 — 23/11/2026
+
+- Adicionada configuração hardcore booleana (padrão false), identidade exata por conta/sessão, backups em segundo plano e registro persistente de resets pendentes.
+- Integração com backend nativo verificado do Live Map 1.14.0 para reset no renascimento de nível/XP, inventário e skills, preservando conhecimento e teleportando ao ponto inicial, sem kick.
+- Operações interrompidas mantidas para recuperação na reconexão; conclusão e novas mortes serializadas para não remover o registro de uma morte posterior.
+- Validação automatizada: 30 testes Rust, 5 testes Node, 18 testes C++ do Live Map, inspeção de exports da DLL e verificação offline de patterns/RVAs (servidor verificado aceito, executável alheio recusado); sem validação dentro do jogo. Requer o Live Map atualizado.
+
 ## 3.1.0 — 20/11/2026
 
 - Fichas usam CSS, JavaScript, catálogos, arte e ícones compartilhados em guardian/assets/<versão>/. HTML mantém somente os dados do personagem e abre por file:// sem fetch.

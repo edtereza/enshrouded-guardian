@@ -2,6 +2,30 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 4.0.0 — 2026-11-23
+
+- Remove the update-check configuration toggle and its legacy alias: version checks always run at startup and periodically in the background. Old toggle fields no longer disable checking.
+- Checks remain informational only: announce newer releases; never download or install update binaries or upload saves. This retires the previous opt-out behavior.
+- Remove the setting from both READMEs and retain unknown-field coverage in migration tests. Automated validation: Rust/Node tests and local Shroudtopia DLL compilation; no in-game test.
+
+## 3.3.1 — 2026-11-23
+
+- Store new hardcore backups and completion records under guardian/<SteamID64>/hardcore/history/<token>/; reconnect reference snapshots use the same history folder. Keep legacy hardcore-history backups readable without moving or overwriting them.
+- Update both READMEs. Automated validation covers the new layout, legacy fallback and preservation; no in-game test.
+
+## 3.3.0 — 2026-11-23
+
+- Send first-join and imported-character reset announcements in Portuguese and English in the same chat line. Preserve message targeting and the existing notification/kick timing; translate the generic English character label too.
+- Move hardcore documentation below Features, include the full configuration and hardcore setting descriptions, remove the English-storage feature note and named map references from both READMEs, and document bilingual announcements.
+- Validation: automated Rust message/targeting/timing tests and local Shroudtopia DLL compilation; no new in-game test.
+
+## 3.2.0 — 2026-11-23
+
+- Add hardcore boolean configuration (default false), exact account/session checks, background reference backups and persisted pending resets.
+- Integrate Live Map 1.14.0's verified native respawn backend for level/XP, inventory and skill resets with knowledge preserved and native start-point teleport, without a kick.
+- Retain interrupted resets for reconnect recovery and serialize completion/death markers to avoid retiring a newer death.
+- Automated validation: 30 Rust tests, 5 Node tests, 18 Live Map C++ tests, DLL export inspection and offline pattern/RVA probe (verified server accepted, unrelated executable rejected); no in-game validation. Requires the updated Live Map backend.
+
 ## 3.1.0 — 2026-11-20
 
 - Character sheets now reference shared, versioned guardian/assets/<version>/ files for CSS, JavaScript, catalogs, UI artwork and item images. HTML retains only the current character data and works over file:// without fetch.

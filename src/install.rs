@@ -170,9 +170,7 @@ pub fn instalar() -> bool {
         logging::log(&format!("Enshrouded Server Guardian v{VERSAO} {} ({} {build})",
             "loaded", "server build"));
         // also when the hooks fail: that's exactly when a new version may fix it
-        if logging::verificar_atualizacao() {
-            updates::verificar(VERSAO);
-        }
+        updates::verificar(VERSAO);
         // Divergent builds can use validated core patterns. Extra features
         // depending on a fixed layout stay disabled until verified.
         if !crate::compatibility::verify(&build) {
@@ -210,6 +208,7 @@ pub fn instalar() -> bool {
         let ponto_chat = crate::compatibility::ready().then(|| scan::achar_chat(&img)).flatten();
         let ponto_reset = crate::compatibility::ready().then(|| scan::achar_reset_chat(&img)).flatten();
         let n = state::iniciar(aplicar, build);
+        crate::hardcore::initialize();
 
         let s_entrada = salto(bloco, gancho_entrada as *const () as usize);
         let s_saida = salto(bloco + 16, gancho_saida as *const () as usize);

@@ -176,7 +176,7 @@ mod tests {
         for (legacy_time, current_time, legacy_wins) in [(10, 20, true), (20, 10, false), (10, 10, true)] {
             let root = config_root();
             let legacy = b"\xef\xbb\xbf{\"modo\":\"observar\",\"admins\":[],\"whitelist\":{\"enabled\":true,\"steamIds\":[\"76561198000000001\"]},\"legacyOnly\":7}";
-            let current = br#"{"mode":"enforce","admins":["76561198000000002"],"whitelist":{"enabled":false,"players":[],"note":"kept"},"checkUpdates":false}"#;
+            let current = br#"{"mode":"enforce","admins":["76561198000000002"],"whitelist":{"enabled":false,"players":[],"note":"kept"},"customSetting":false}"#;
             for (name, bytes, seconds) in [("guardiao.json", legacy.as_slice(), legacy_time), ("guardian.json", current.as_slice(), current_time)] {
                 std::fs::write(root.join(name), bytes).unwrap();
                 std::fs::File::options().write(true).open(root.join(name)).unwrap().set_times(
@@ -196,7 +196,7 @@ mod tests {
             assert!(result["whitelist"].get("steamIds").is_none());
             assert_eq!(result["whitelist"]["note"], "kept");
             assert_eq!(result["legacyOnly"], 7);
-            assert_eq!(result["checkUpdates"], false);
+            assert_eq!(result["customSetting"], false);
             let backup = root.join("guardian/legacy-backup/config/merge-1");
             assert_eq!(std::fs::read(backup.join("guardiao.json.original")).unwrap(), legacy);
             assert_eq!(std::fs::read(backup.join("guardian.json.original")).unwrap(), current);

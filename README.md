@@ -35,14 +35,49 @@ This version retains that foundation while adding the features below.
 ## Features
 
 - **Server-authoritative characters:** restore the stored reference when a regular player joins with a different character.
+- **Optional hardcore:** reset level, XP, inventory and skills at respawn after death, preserving knowledge and returning to the initial spawn without disconnecting. Disabled by default.
 - **First-join reset:** accounts without a stored reference start at level 1 with zero XP, empty inventories, no purchased skills, and starting pants. Appearance is preserved, and the incoming save is backed up before replacement.
 - **Optional SteamID64 whitelist:** control which accounts may join.
 - **Admin exceptions:** accept an administrator's incoming character as the new server reference, preserving the previous copy.
 - **Connection records:** with the whitelist disabled, record each connected player's SteamID64 and Steam display name.
-- **Reset announcements and reconnection:** broadcast the configured reset messages and request a non-ban kick after the timed sequence, waiting for the complete reset save to be sent.
+- **Reset announcements and reconnection:** broadcast Portuguese/English reset messages and request a non-ban kick after the timed sequence, waiting for the complete reset save to be sent.
 - **Static character reports:** generate `server_save.html` with equipment, backpack, skills, knowledge, and validation results. Images, CSS, JavaScript and catalogs are shared in guardian/assets/<version>/; character data stays in each HTML. No web server is needed.
-- **English storage:** configuration, technical logs, report fields, and generated filenames use English. The configured in-game announcements remain in Portuguese.
 - **Preserved history:** keep previous reference copies, rejected saves, original first-join characters, and administrator replacement backups.
+
+## Hardcore mode (3.2.0)
+
+Hardcore applies a progression penalty after each death. The reset runs when the character respawns, without kicking or disconnecting the player.
+
+### Enable or disable
+
+Add `"hardcore": true` as a top-level setting in the existing `guardian.json` beside the dedicated-server executable, keeping your other settings. The default is `false`. Set it back to `false` to disable the mode, and restart the server after changing this setting.
+
+Hardcore requires a compatible native respawn backend on the dedicated server. Without it, live death resets are unavailable. No client modification or EMF runtime is required.
+
+### What happens after a death
+
+1. The native backend identifies the death by account hash, and Guardian verifies the account's SteamID and current connection. Player names and proximity never authorize a reset.
+2. Before changing the character, Guardian's background worker backs up the last server reference and records the pending reset.
+3. When the character respawns and is ready for gameplay, the native backend applies the reset:
+
+| Character data | Result |
+| --- | --- |
+| Level | Reset to 1 |
+| XP and pending XP | Reset to 0 |
+| Inventory and equipment | Removed from the character |
+| Unlocked skills | Cleared, including verified skill effects |
+| Knowledge | Preserved |
+| Position | Teleported to the world's initial `StartLocation` spawn point |
+
+The rule also applies to administrators. Shared base chests are not emptied. Guardian verifies the native reset and teleport, then completes the operation after the next successful character save. The death reset does not use the disconnect sequence associated with a first join from another world.
+
+### Backups and interrupted resets
+
+Backups are stored under `guardian/<SteamID64>/hardcore/history/<token>/`. The file `guardian/<SteamID64>/hardcore-pending.json` tracks an unfinished reset. Interrupted operations remain pending and are reapplied on reconnect using the server's character reference, preserving its knowledge.
+
+The backend currently supports only the verified dedicated-server executable (PE timestamp `6aeb143e`, image size `0x1dde000`). It checks all required native byte patterns and RVAs before installing hooks. Missing identity, backup, component-layout or initial-spawn verification prevents the affected reset from completing; failures are logged and no automatic kick is requested. If the backend cannot initialize, live death resets are unavailable.
+
+**Validation status:** automated tests and an offline executable compatibility probe have passed. This implementation has not yet been tested inside the game. Validate it on a separate world with backed-up characters before production use.
 
 ## Dependencies
 
@@ -135,7 +170,7 @@ Create `guardian.json` beside `enshrouded_server.exe`:
 ```json
 {
   "mode": "enforce",
-  "checkUpdates": true,
+  "hardcore": false,
   "whitelist": {
     "enabled": false,
     "players": []
@@ -150,14 +185,14 @@ Use complete SteamID64 values **as strings**, for example `"76561199244298543"`.
 | --- | --- |
 | `mode: "enforce"` | Applies character reference and first-join reset rules. |
 | `mode: "observe"` | Logs regular character differences without replacing or resetting them. |
-| `checkUpdates` | Enables the release notification check. Does not download or install updates. |
+| `hardcore` | Defaults to `false`. When `true`, resets the character at respawn after a confirmed death; preserves knowledge. Applies to administrators too and requires the native backend. |
 | `whitelist.enabled` | When true, only accounts in `whitelist.players` may join, including administrators. Applies in observe mode too. |
 | `whitelist.players` | Allowed SteamID64 strings. With the whitelist disabled, connections are recorded without automatically changing this list. |
 | `admins` | SteamID64 strings whose incoming character replaces the server reference, without a first-join reset or reset kick. This does not grant native game administrator permissions. |
 
-Whitelist and admin lists are reloaded on each join. Changing the operating mode requires a restart. Invalid access configuration refuses new joins and records the reason.
+Whitelist and admin lists are reloaded on each join. Changing the operating mode or `hardcore` requires a restart. Invalid access configuration refuses new joins and records the reason.
 
-The updater checks the latest published public release of
+Version checks are always enabled and cannot be disabled through configuration. They are informational only: no update is downloaded or installed. The updater checks the latest published public release of
 [edtereza/enshrouded-guardian](https://github.com/edtereza/enshrouded-guardian/releases/latest)
 at startup and every 24 hours. Stable version tags publish GitHub-built assets
 to Releases, making newer versions discoverable by this checker.
@@ -168,6 +203,18 @@ For an established server, start with `mode: "observe"` and review the recorded
 differences before enabling enforcement. Observe mode still writes server
 reference copies as players progress. Access restrictions and the explicit admin
 override remain independent of regular character enforcement.
+
+### In-game announcements (Portuguese and English)
+
+Announcements include both languages in the same chat line, separated by `|`. No language selector or additional configuration flag is required.
+
+| Event | Announcement |
+| --- | --- |
+| First accepted join, announced to the other players | `Guardião: {name} acabou de começar!!! \| Guardian: {name} has just started!!!` |
+| Imported character reset, 5 seconds after login | `[Guardião] {name} acabou de vir de outro mundo. \| [Guardian] {name} has just arrived from another world.` |
+| Reconnect notice, 1 second later | `[Guardiao] Por isto, {name} vai precisar sair e reconectar novamente. \| [Guardian] Therefore, {name} needs to leave and reconnect.` |
+
+Both reset notices are global. Five seconds after the second notice, Guardian requests a non-ban kick once the full reset save has been sent. This first-join sequence is separate from hardcore, which resets at respawn without disconnecting the player.
 
 ## How the server reference works
 
@@ -297,8 +344,7 @@ The optional `scripts/build-shroudtopia.cmd` runs these commands in an MSVC deve
 templates/assets/ holds the viewer CSS, JavaScript and catalog sources, also embedded into the DLL.
 At runtime these assets are written once under guardian/assets/<version>/, shared
 by all character sheets. Keep assets/ beside the account folders when copying
-sheets; a single server_save.html is no longer self-contained. Live Map 1.9.0
-serves these assets with its existing key protection. Old asset versions remain
+sheets; a single server_save.html is no longer self-contained. Old asset versions remain
 so older sheets keep working.
 
 Changing an embedded template requires recompiling the DLL. The server does not need a separate copy of `save-viewer.html`.
@@ -354,7 +400,7 @@ directory when upgrading so this continuity information is preserved.
   chest contents from a previous world state.
 - **No save uploads:** the release checker contacts GitHub to request release
   metadata. It does not upload character or world files and does not install
-  downloaded binaries. Set `checkUpdates: false` to disable that check.
+  downloaded binaries. Version checks are mandatory and informational only.
 - **Engine-dependent:** byte-pattern discovery and compatibility guards reduce
   unsupported access; they do not establish that every future game build will
   behave identically.

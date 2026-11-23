@@ -1,6 +1,6 @@
-//! New-version notice. A single request, on load, for the latest release published on GitHub; the
-//! result only shows up in the console and in guardian.log. Nothing is downloaded and nothing about the
-//! server is sent. Turned off with {"checkUpdates": false} (or {"verificarAtualizacao": false}) in guardian.json.
+//! Mandatory informational version checks on startup and periodically on a background thread.
+//! Results appear in the console and guardian.log. Release metadata is fetched; no
+//! update binaries are downloaded or installed, and no character/world data is uploaded.
 
 use crate::logging;
 use core::ptr::null;

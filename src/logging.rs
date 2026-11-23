@@ -4,17 +4,10 @@
 use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 static RAIZ: OnceLock<PathBuf> = OnceLock::new();
-static VERIFICAR: AtomicBool = AtomicBool::new(true);
-
-/// Whether the new-version check is on (the default) in guardian.json.
-pub fn verificar_atualizacao() -> bool {
-    VERIFICAR.load(Ordering::Relaxed)
-}
 
 
 pub fn definir_raiz(dir_exe: &Path) -> bool {
@@ -247,13 +240,9 @@ fn campo(json: &str, chave: &str) -> Option<String> {
 
 /// Reads guardian.json, accepting both English and Portuguese names:
 /// {"mode": "observe"} or {"modo": "observar"}; {"language": "pt-BR"} or {"idioma": "pt-BR"}.
-/// No file or no mode means enforce. Returns whether to enforce. {"checkUpdates": false} turns off the version check.
+/// No file or no mode means enforce. Returns whether to enforce. Update checks are always enabled.
 pub fn ler_config() -> bool {
     let json = fs::read_to_string(raiz().join("guardian.json")).unwrap_or_default();
-    let desligada = |chave: &str| json.find(&format!("\"{chave}\"")).is_some_and(|i| {
-        json[i + chave.len() + 2..].trim_start().strip_prefix(':').is_some_and(|r| r.trim_start().starts_with("false"))
-    });
-    VERIFICAR.store(!(desligada("checkUpdates") || desligada("verificarAtualizacao")), Ordering::Relaxed);
     let modo = campo(&json, "mode").or_else(|| campo(&json, "modo")).unwrap_or_default();
     !matches!(modo.as_str(), "observe" | "observar")
 }

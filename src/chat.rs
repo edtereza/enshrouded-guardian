@@ -48,7 +48,7 @@ unsafe extern "system" fn avaliar(
     if resultado == 0 && crate::compatibility::ready() {
         if !conexao.is_null() {
             let nome = nome_da_conexao(conexao);
-            state::registrar_conexao(ler(conexao, 0), nome.as_deref());
+            state::registrar_conexao(ler(conexao, 0), nome.as_deref(), ler(conexao, 0x48));
         }
         agendar_reset(conexao);
         anunciar(postar, ler(servidor, 0x60), conexao);
@@ -116,9 +116,10 @@ unsafe fn nome_personagem(servidor: *mut u8, s: &Sequencia) -> Option<String> {
 }
 
 fn mensagem_reset(etapa: u8, nome: &str) -> Option<String> {
+    let nome_en = if nome == "O personagem" { "The character" } else { nome };
     match etapa {
-        0 => Some(format!("[Guardião] {nome} acabou de vir de outro mundo.")),
-        1 => Some(format!("[Guardiao] Por isto, {nome} vai precisar sair e reconectar novamente.")),
+        0 => Some(format!("[Guardião] {nome} acabou de vir de outro mundo. | [Guardian] {nome_en} has just arrived from another world.")),
+        1 => Some(format!("[Guardiao] Por isto, {nome} vai precisar sair e reconectar novamente. | [Guardian] Therefore, {nome_en} needs to leave and reconnect.")),
         _ => None,
     }
 }
@@ -347,11 +348,13 @@ mod testes {
 
     #[test]
     fn anuncios_de_reset_sao_globais_e_usam_nome_do_personagem() {
+        assert!(mensagem_reset(0, "O personagem").unwrap().contains("[Guardian] The character has just arrived"));
+        assert_eq!(mensagem_primeira_entrada("Gwindor"), "Guardião: Gwindor acabou de começar!!! | Guardian: Gwindor has just started!!!");
         let mut chat = [0u8; 512];
         let mut no = [0u8; 512];
         let s = Sequencia::nova(64, 123, 129, Instant::now());
-        assert_eq!(mensagem_reset(0, "Gwindor").unwrap(), "[Guardião] Gwindor acabou de vir de outro mundo.");
-        assert_eq!(mensagem_reset(1, "Gwindor").unwrap(), "[Guardiao] Por isto, Gwindor vai precisar sair e reconectar novamente.");
+        assert_eq!(mensagem_reset(0, "Gwindor").unwrap(), "[Guardião] Gwindor acabou de vir de outro mundo. | [Guardian] Gwindor has just arrived from another world.");
+        assert_eq!(mensagem_reset(1, "Gwindor").unwrap(), "[Guardiao] Por isto, Gwindor vai precisar sair e reconectar novamente. | [Guardian] Therefore, Gwindor needs to leave and reconnect.");
         unsafe {
             chat.as_mut_ptr().add(ULTIMA_MENSAGEM).cast::<*mut u8>().write_unaligned(no.as_mut_ptr());
             for i in 0..3 { chat[LEITORES + PASSO_LEITOR * i] = 1; }
@@ -390,6 +393,10 @@ const PASSO_LEITOR: usize = 12;
 const ULTIMA_MENSAGEM: usize = 0x1c8;
 const MASCARA: usize = 0x20;
 
+fn mensagem_primeira_entrada(nome: &str) -> String {
+    format!("Guardião: {nome} acabou de começar!!! | Guardian: {nome} has just started!!!")
+}
+
 unsafe fn anunciar(postar: Postar, chat: *mut u8, conexao: *const u8) {
     let handle: u32 = ler(conexao, 0);
     if handle == 0 || !state::confirmar_primeira_entrada(handle) {
@@ -415,7 +422,7 @@ unsafe fn anunciar(postar: Postar, chat: *mut u8, conexao: *const u8) {
     if nome.is_empty() {
         return;
     }
-    let linha = format!("Guardião: {nome} acabou de começar!!!");
+    let linha = mensagem_primeira_entrada(nome);
     let texto = Texto { ptr: linha.as_ptr(), len: linha.len() };
     let mut saida = [0u64; 2];
     // Type 4 with no localization tag renders the text as a system line.
