@@ -77,8 +77,6 @@ Backups are stored under `guardian/<SteamID64>/hardcore/history/<token>/`. The f
 
 The backend currently supports only the verified dedicated-server executable (PE timestamp `6aeb143e`, image size `0x1dde000`). It checks all required native byte patterns and RVAs before installing hooks. Missing identity, backup, component-layout or initial-spawn verification prevents the affected reset from completing; failures are logged and no automatic kick is requested. If the backend cannot initialize, live death resets are unavailable.
 
-**Validation status:** automated tests and an offline executable compatibility probe have passed. This implementation has not yet been tested inside the game. Validate it on a separate world with backed-up characters before production use.
-
 ## Dependencies
 
 ### Required to run

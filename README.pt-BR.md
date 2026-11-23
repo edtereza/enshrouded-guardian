@@ -96,8 +96,6 @@ Os backups ficam em `guardian/<SteamID64>/hardcore/history/<token>/`. O arquivo 
 
 O backend aceita somente o executável dedicado verificado (timestamp PE `6aeb143e`, tamanho da imagem `0x1dde000`). Todos os patterns de bytes e RVAs necessários são conferidos antes da instalação dos hooks. Falhas na verificação de identidade, backup, layout dos componentes ou ponto inicial impedem a conclusão do reset afetado; são registradas em log e não solicitam kick automático. Se o backend não inicializar, o reset por morte durante a sessão fica indisponível.
 
-**Estado da validação:** testes automatizados e verificação offline do executável passaram. A implementação ainda não foi testada dentro do jogo. Valide em mundo separado, com backup dos personagens, antes de usar em produção.
-
 ## 🚀 Instalação
 
 1. Abra **[Releases](https://github.com/edtereza/enshrouded-guardian/releases/latest)**.
