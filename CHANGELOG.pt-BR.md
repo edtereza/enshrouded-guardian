@@ -2,6 +2,10 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 4.1.1 — 23/11/2026
+
+- Habilitado suporte a caminhos longos no Git do GitHub Actions para clonar Zydis/Zycore no diretório de build do Cargo. Corrige a publicação que falhou na 4.1.0; sem alteração de comportamento no jogo.
+
 ## 4.1.0 — 23/11/2026
 
 - Backend nativo de hardcore, hooks de morte, simulação, reset e teleporte incorporados ao Guardian; dependências fixadas SafetyHook/Zydis/Zycore e licenças incluídas na build. Removida dependência de mod complementar; ponte opcional ABI 2 disponível.

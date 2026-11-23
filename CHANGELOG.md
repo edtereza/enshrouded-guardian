@@ -2,6 +2,10 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 4.1.1 — 2026-11-23
+
+- Enable Git long-path support in GitHub Actions so the nested Zydis/Zycore dependency clone succeeds inside Cargo's build directory. Fixes the failed 4.1.0 publication; no gameplay changes.
+
 ## 4.1.0 — 2026-11-23
 
 - Embed native hardcore simulation, death-callsite hooks, respawn/reset and teleport code into Guardian; integrate pinned SafetyHook/Zydis/Zycore build dependencies and license notices. Remove the companion-mod runtime requirement and expose an optional ABI-2 telemetry bridge.

@@ -16,6 +16,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
+      - name: Enable long paths for native dependency clones
+        run: git config --global core.longpaths true
       - name: Enable Visual Studio CMake and Ninja
         shell: pwsh
         run: |
