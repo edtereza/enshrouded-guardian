@@ -2,6 +2,11 @@
 
 *Read this in [English](CHANGELOG.md).*
 
+## 3.1.1 — 2026-11-24
+
+- Na inicialização, marcar cópias persistidas como offline alterando meta.json final=0 antigo para final=1 antes de instalar os hooks. Preservar personagem, conhecimentos, datas do save e outros metadados. Saves periódicos de jogadores conectados voltam a indicar online normalmente; registrar falhas nos metadados.
+- Validação: 28 testes Rust aprovados, incluindo reset de presença no reinício, preservação de metadados/datas e binários, metadados inválidos, idempotência e novo ciclo de save periódico/reinício. DLL release compilada; sem teste no jogo.
+
 ## 3.1.0 — 20/11/2026
 
 - Fichas usam CSS, JavaScript, catálogos, arte e ícones compartilhados em guardian/assets/<versão>/. HTML mantém somente os dados do personagem e abre por file:// sem fetch.

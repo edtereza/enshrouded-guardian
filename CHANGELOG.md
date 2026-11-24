@@ -2,6 +2,11 @@
 
 *Leia em [português](CHANGELOG.pt-BR.md).*
 
+## 3.1.1 — 2026-11-24
+
+- At startup, mark persisted character copies offline by changing stale meta.json final=0 to final=1 before hooks are installed. Preserve character bytes, knowledge, save timestamps and unrelated metadata. Periodic saves from connected players restore their online status normally; log metadata failures.
+- Validation: 28 Rust tests passed, including restart presence reset, metadata/timestamp and binary preservation, invalid metadata, idempotence and a new periodic-save/restart cycle. Release DLL compiled; no in-game test.
+
 ## 3.1.0 — 2026-11-20
 
 - Character sheets now reference shared, versioned guardian/assets/<version>/ files for CSS, JavaScript, catalogs, UI artwork and item images. HTML retains only the current character data and works over file:// without fetch.

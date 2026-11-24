@@ -59,6 +59,35 @@ pub struct Estado {
 
 static ESTADO: OnceLock<Mutex<Estado>> = OnceLock::new();
 
+/// The editor derives presence from meta.final. A previous process cannot keep
+/// a player online in the new session; do not alter the character or save time.
+pub fn marcar_offline_na_inicializacao(root: &Path) -> std::io::Result<usize> {
+    let mut count = 0;
+    for entry in fs::read_dir(root)? {
+        let entry = entry?;
+        if !entry.file_type()?.is_dir() || entry.file_name().to_string_lossy().parse::<u64>().is_err() { continue; }
+        let path = entry.path().join("meta.json");
+        let result = (|| -> std::io::Result<bool> {
+            let bytes = match fs::read(&path) {
+                Ok(bytes) => bytes,
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(false),
+                Err(e) => return Err(e),
+            };
+            let mut meta: serde_json::Value = serde_json::from_slice(&bytes)?;
+            if !meta.is_object() { return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "save metadata must be an object")); }
+            if meta["final"].as_u64() != Some(0) { return Ok(false); }
+            meta["final"] = serde_json::json!(1);
+            logging::gravar_atomico(&path, &serde_json::to_vec_pretty(&meta)?)?;
+            Ok(true)
+        })();
+        match result {
+            Ok(true) => count += 1,
+            Ok(false) => {},
+            Err(e) => logging::log(&format!("Could not mark saved player offline at startup ({}): {e}", path.display())),
+        }
+    }
+    Ok(count)
+}
 pub fn iniciar(aplicar: bool, build: String) -> usize {
     let mut copias = HashMap::new();
     if let Ok(dirs) = fs::read_dir(logging::dados()) {
@@ -248,6 +277,34 @@ pub(crate) fn aparencia_inicial(a: &[u8], k: Option<&[u8]>) -> bool {
 
 #[cfg(test)]
 mod testes {
+    #[test]
+    fn startup_clears_stale_presence_without_changing_character_or_save_time() {
+        let root = std::env::temp_dir().join(format!("guardian-offline-{}-{}",std::process::id(),
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+        let player = root.join("76561199244298543");
+        let history = player.join("history/old");
+        std::fs::create_dir_all(&history).unwrap();
+        let original = serde_json::json!({"final":0,"updatedAt":"original-time","handle":42,"custom":"keep"});
+        std::fs::write(player.join("meta.json"),original.to_string()).unwrap();
+        std::fs::write(history.join("meta.json"),original.to_string()).unwrap();
+        std::fs::write(player.join("A.bin"),b"character").unwrap();
+        std::fs::write(player.join("K.bin"),b"knowledge").unwrap();
+        let invalid = root.join("123");std::fs::create_dir_all(&invalid).unwrap();
+        std::fs::write(invalid.join("meta.json"),b"invalid").unwrap();
+        assert_eq!(super::marcar_offline_na_inicializacao(&root).unwrap(),1);
+        let actual: serde_json::Value=serde_json::from_slice(&std::fs::read(player.join("meta.json")).unwrap()).unwrap();
+        let mut expected=original.clone();expected["final"]=serde_json::json!(1);
+        assert_eq!(actual,expected);
+        assert_eq!(std::fs::read(player.join("A.bin")).unwrap(),b"character");
+        assert_eq!(std::fs::read(player.join("K.bin")).unwrap(),b"knowledge");
+        assert_eq!(std::fs::read_to_string(history.join("meta.json")).unwrap(),original.to_string());
+        assert_eq!(std::fs::read(invalid.join("meta.json")).unwrap(),b"invalid");
+        assert_eq!(super::marcar_offline_na_inicializacao(&root).unwrap(),0);
+        std::fs::write(player.join("meta.json"),original.to_string()).unwrap(); // next session's periodic save
+        assert_eq!(super::marcar_offline_na_inicializacao(&root).unwrap(),1);
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
     use super::{aparencia_inicial, progresso_personagem};
 
     #[test]

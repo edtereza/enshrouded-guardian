@@ -147,6 +147,10 @@ pub fn instalar() -> bool {
     let Some(exe) = std::env::current_exe().ok() else { return false };
     let Some(dir) = exe.parent() else { return false };
     if !logging::definir_raiz(dir) { return false; }
+    match state::marcar_offline_na_inicializacao(&logging::dados()) {
+        Ok(count) => logging::log(&format!("Startup presence reset: {count} saved players marked offline.")),
+        Err(e) => logging::log(&format!("Could not reset saved player presence at startup: {e}")),
+    }
     // console output waits for the world to finish loading, so it lands after the game's boot log
     logging::liberar_quando_pronto();
     let aplicar = logging::ler_config();
