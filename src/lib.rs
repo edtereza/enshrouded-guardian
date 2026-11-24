@@ -6,7 +6,6 @@
 
 mod scan;
 mod access;
-mod hardcore;
 mod updates;
 mod chat;
 mod compatibility;

@@ -11,7 +11,7 @@ for (const [oldTime, newTime, oldWins] of [[10, 20, true], [20, 10, false], [10,
     try {
       fs.mkdirSync(path.join(root, 'guardian'));
       const old = '\uFEFF{"modo":"observar","admins":[],"whitelist":{"enabled":true,"steamIds":["76561198000000001"]},"legacyOnly":7}';
-      const current = '{"mode":"enforce","admins":["76561198000000002"],"whitelist":{"enabled":false,"players":[],"note":"kept"},"customSetting":false}';
+      const current = '{"mode":"enforce","admins":["76561198000000002"],"whitelist":{"enabled":false,"players":[],"note":"kept"},"checkUpdates":false}';
       for (const [name, content, time] of [['guardiao.json', old, oldTime], ['guardian.json', current, newTime]]) {
         fs.writeFileSync(path.join(root, name), content);
         fs.utimesSync(path.join(root, name), time, time);
@@ -25,7 +25,7 @@ for (const [oldTime, newTime, oldWins] of [[10, 20, true], [20, 10, false], [10,
       assert.equal(merged.whitelist.steamIds, undefined);
       assert.equal(merged.whitelist.note, 'kept');
       assert.equal(merged.legacyOnly, 7);
-      assert.equal(merged.customSetting, false);
+      assert.equal(merged.checkUpdates, false);
       assert.equal(fs.readFileSync(path.join(backup, 'guardiao.json.original'), 'utf8'), old);
       assert.equal(fs.readFileSync(path.join(backup, 'guardian.json.original'), 'utf8'), current);
       assert.equal(fs.existsSync(path.join(root, 'guardiao.json')), false);

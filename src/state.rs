@@ -52,7 +52,6 @@ pub struct Estado {
     pub build: String,
     pub copias: HashMap<u64, Copia>,
     pub steam_do_handle: HashMap<u32, u64>,
-    account_do_handle: HashMap<u32, u64>,
     pub forcar_completo: HashSet<u32>,
     rejected: HashSet<u32>,
     primeiras_confirmar: HashSet<u32>,
@@ -72,7 +71,7 @@ pub fn iniciar(aplicar: bool, build: String) -> usize {
     }
     let n = copias.len();
     let _ = ESTADO.set(Mutex::new(Estado {
-        aplicar, build, copias, steam_do_handle: HashMap::new(), account_do_handle: HashMap::new(),
+        aplicar, build, copias, steam_do_handle: HashMap::new(),
         forcar_completo: HashSet::new(), rejected: HashSet::new(),
         primeiras_confirmar: HashSet::new(),
     }));
@@ -102,15 +101,11 @@ fn guardar_history(dir: &Path, carimbo: &str) {
 
 /// Preserve the previous files before accepting an administrator's incoming save.
 fn salvar_admin(dir: &Path, a: &[u8], k: &[u8], k_estado: u8, sid: u64, handle: u32, build: &str) -> std::io::Result<()> {
-    salvar_referencia(dir, a, k, k_estado, sid, handle, build, "admin")
-}
-
-fn salvar_referencia(dir: &Path, a: &[u8], k: &[u8], k_estado: u8, sid: u64, handle: u32, build: &str, reason: &str) -> std::io::Result<()> {
     fs::create_dir_all(dir)?;
     let meta = serde_json::to_vec_pretty(&serde_json::json!({
         "steamid": sid.to_string(), "handle": handle, "knowledgeState": k_estado,
         "characterBytes": a.len(), "knowledgeCount": k.len() / 8, "build": build,
-        "updatedAt": logging::agora(), "origin": format!("{reason}_join")
+        "updatedAt": logging::agora(), "origin": "admin_join"
     }))?;
     let novos = [("A.bin", a), ("K.bin", k), ("meta.json", meta.as_slice())];
     let mut anteriores = Vec::new();
@@ -124,8 +119,7 @@ fn salvar_referencia(dir: &Path, a: &[u8], k: &[u8], k_estado: u8, sid: u64, han
     }
     if anteriores.iter().any(|(_, bytes)| bytes.is_some()) {
         let nanos = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_nanos();
-        let history = if reason == "hardcore" { dir.join("hardcore").join("history") } else { dir.join(format!("{reason}-history")) };
-        let backup = history.join(format!("{}-{nanos}", logging::carimbo()));
+        let backup = dir.join("admin-history").join(format!("{}-{nanos}", logging::carimbo()));
         fs::create_dir_all(&backup)?;
         for (nome, bytes) in &anteriores {
             if let Some(bytes) = bytes { logging::gravar_atomico(&backup.join(nome), bytes)?; }
@@ -336,7 +330,6 @@ pub unsafe fn sessao(registro_sessao: *const u8) {
     crate::chat::cancelar_reset(handle);
     com_estado(|e| {
         e.steam_do_handle.insert(handle, sid);
-        e.account_do_handle.remove(&handle);
         e.rejected.remove(&handle);
         e.forcar_completo.remove(&handle);
         e.primeiras_confirmar.remove(&handle);
@@ -352,7 +345,7 @@ pub unsafe fn saida_antes(st: *mut u8) -> Option<u32> {
         return None;
     }
     let handle: u32 = rd(st, 8);
-    let mut a = ler_array(st.add(0x18), 1);
+    let a = ler_array(st.add(0x18), 1);
     let k = ler_k(st)?;
     let k_estado: u8 = rd(st, 0x98);
     let (versao, final_) = (rd::<u32>(st, 0x10), rd::<u8>(st, 0x14));
@@ -360,7 +353,7 @@ pub unsafe fn saida_antes(st: *mut u8) -> Option<u32> {
         if e.rejected.contains(&handle) {
             return None;
         }
-        let mut forcado = e.forcar_completo.contains(&handle);
+        let forcado = e.forcar_completo.contains(&handle);
         if forcado {
             wr::<u8>(st, 0x140, rd::<u8>(st, 0x140) | 1);
         }
@@ -368,20 +361,6 @@ pub unsafe fn saida_antes(st: *mut u8) -> Option<u32> {
             logging::log(&format!("{} {handle}", "Server save for an unknown player (no Steam ID yet), session"));
             return forcado.then_some(handle);
         };
-        if crate::hardcore::saving(sid) {
-            let Ok((reset, _, _)) = crate::save::personagem_hardcore(&a, &k, k_estado) else {
-                logging::log(&format!("Hardcore {sid}: could not validate outgoing reset; reference unchanged."));
-                return forcado.then_some(handle);
-            };
-            if reset != a && gravar_array(st.add(0x18), &reset, 1).is_err() {
-                logging::log(&format!("Hardcore {sid}: could not synchronize reset save; reference unchanged."));
-                return forcado.then_some(handle);
-            }
-            a = reset;
-            forcado = true;
-            e.forcar_completo.insert(handle);
-            wr::<u8>(st, 0x140, rd::<u8>(st, 0x140) | 1);
-        }
         if !a.is_empty() {
             crate::save::capturar(sid, handle, &a, Some(&k), k_estado, "server");
             let dir = logging::dados().join(sid.to_string());
@@ -394,7 +373,6 @@ pub unsafe fn saida_antes(st: *mut u8) -> Option<u32> {
             if ok {
                 // the copy just came from the server: it is current, whatever the marker said
                 let _ = fs::remove_file(dir.join(MARCA));
-                crate::hardcore::saved(sid);
             } else {
                 logging::log(&format!("{} {sid}", "ERROR: could not write the copy of player"));
             }
@@ -473,21 +451,6 @@ pub unsafe fn entrada(st: *mut u8) -> bool {
         let jogador = format!("{} {sid}", "Player");
         let mut k = ler_k(st);
         crate::save::capturar(sid, handle, &a, k.as_deref(), rd(st, 0x98), "client");
-        if crate::hardcore::pending(sid) {
-            let result = (|| -> Result<Copia, String> {
-                if !crate::hardcore::ready_for_join(sid) { return Err("Hardcore backup is still pending; retry joining shortly".into()); }
-                let reference = e.copias.get(&sid).cloned().or_else(|| crate::hardcore::backup_reference(sid)).ok_or("Missing hardcore server reference")?;
-                let (reset, knowledge, knowledge_state) = (reference.a, reference.k, reference.k_estado);
-                salvar_referencia(&dir, &reset, &knowledge, knowledge_state, sid, handle, &e.build, "hardcore").map_err(|e| e.to_string())?;
-                gravar_array(st.add(0x18), &reset, 1).and_then(|_| gravar_k(st, &knowledge, knowledge_state)).map_err(str::to_owned)?;
-                if ler_array(st.add(0x18), 1) != reset || ler_k(st).as_deref() != Some(&knowledge[..]) { return Err("Hardcore server-reference restoration did not stick".into()); }
-                Ok(Copia { a:reset, k:knowledge, k_estado:knowledge_state, build:e.build.clone(), desatualizada:false })
-            })();
-            match result {
-                Ok(copy) => { e.copias.insert(sid, copy); e.forcar_completo.insert(handle); logging::log(&format!("Hardcore {sid}: pending server reference restored on join; native equipment transfer, reset and start-point teleport still pending.")); return false; }
-                Err(error) => { e.rejected.insert(handle); logging::log_entrada(&format!("Hardcore {sid}: entry denied: {error}")); return true; }
-            }
-        }
         if acesso.admin(sid) {
             let resultado = k.as_deref().ok_or_else(|| "Unreadable admin knowledge".to_string())
                 .and_then(|k| {
@@ -631,7 +594,6 @@ pub unsafe fn entrada(st: *mut u8) -> bool {
             }
         };
         campos.push(("decision", texto(decisao)));
-        e.copias.entry(sid).or_insert_with(|| Copia { a:a.clone(), k:k.clone(), k_estado:rd(st, 0x98), build:e.build.clone(), desatualizada:false });
         logging::registrar("join", &campos);
         false
     }).unwrap_or(false)
@@ -665,9 +627,7 @@ pub fn reset_sincronizado(handle: u32) -> bool {
 
 /// The connection's platform name, not the independently supplied character name.
 /// Logged for every accepted connection while the whitelist is disabled.
-pub fn registrar_conexao(handle: u32, nome: Option<&str>, account: u64) {
-    let sid = com_estado(|e| { e.account_do_handle.insert(handle, account); e.steam_do_handle.get(&handle).copied() }).flatten();
-    if let Some(sid) = sid { crate::hardcore::rebind(sid, handle, account); }
+pub fn registrar_conexao(handle: u32, nome: Option<&str>) {
     let Ok(acesso) = crate::access::carregar(&logging::raiz().join("guardian.json")) else { return };
     if acesso.exige_identidade() { return; }
     let sid = com_estado(|e| e.steam_do_handle.get(&handle).copied()).flatten();
@@ -681,18 +641,4 @@ pub fn registrar_conexao(handle: u32, nome: Option<&str>, account: u64) {
         ("nameAvailable", nome.is_some().to_string()), ("handle", handle.to_string()),
     ]);
     logging::log(&format!("Player connected: {nome_exibido} | SteamID64: {sid} | whitelist disabled"));
-}
-
-pub fn hardcore_identity(handle: u32, account: u64) -> Option<u64> {
-    if account == 0 { return None; }
-    com_estado(|e| (e.account_do_handle.get(&handle) == Some(&account)).then(|| e.steam_do_handle.get(&handle).copied()).flatten()).flatten()
-}
-
-pub fn hardcore_snapshot(handle: u32, account: u64) -> Option<(u64, Copia)> {
-    if account == 0 { return None; }
-    com_estado(|e| {
-        if e.account_do_handle.get(&handle) != Some(&account) { return None; }
-        let sid = *e.steam_do_handle.get(&handle)?;
-        Some((sid, e.copias.get(&sid)?.clone()))
-    }).flatten()
 }

@@ -5,14 +5,12 @@ use std::path::Path;
 
 #[derive(Default)]
 pub struct Acesso {
-    hardcore: bool,
     whitelist_ativa: bool,
     whitelist: HashSet<u64>,
     admins: HashSet<u64>,
 }
 
 impl Acesso {
-    pub fn hardcore(&self) -> bool { self.hardcore }
     pub fn exige_identidade(&self) -> bool { self.whitelist_ativa }
     pub fn permitido(&self, sid: u64) -> bool {
         !self.whitelist_ativa || self.whitelist.contains(&sid)
@@ -37,11 +35,6 @@ fn analisar(texto: &str) -> Result<Acesso, String> {
     let config: Value = serde_json::from_str(texto).map_err(|erro| format!("Invalid guardian.json: {erro}"))?;
     if !config.is_object() { return Err("guardian.json must be a JSON object".into()); }
     let mut acesso = Acesso::default();
-    acesso.hardcore = match config.get("hardcore") {
-        None => false,
-        Some(Value::Bool(value)) => *value,
-        _ => return Err("hardcore must be true or false".into()),
-    };
     if let Some(whitelist) = config.get("whitelist") {
         if !whitelist.is_object() { return Err("whitelist must be an object with enabled and players".into()); }
         acesso.whitelist_ativa = match whitelist.get("enabled") {
@@ -67,15 +60,6 @@ pub fn carregar(arquivo: &Path) -> Result<Acesso, String> {
 mod testes {
     use super::*;
     const ID: u64 = 76561199244298543;
-    #[test]
-    fn hardcore_defaults_to_false_and_only_accepts_booleans() {
-        assert!(!analisar("{}").unwrap().hardcore());
-        assert!(!analisar(r#"{"hardcore":false}"#).unwrap().hardcore());
-        assert!(analisar(r#"{"hardcore":true}"#).unwrap().hardcore());
-        for value in [r#""true""#, "1", "null", "[]", "{}"] {
-            assert!(analisar(&format!(r#"{{"hardcore":{value}}}"#)).is_err());
-        }
-    }
     #[test]
     fn whitelist_opcional_e_admin_sao_regras_separadas() {
         assert!(analisar("{}").unwrap().permitido(ID));

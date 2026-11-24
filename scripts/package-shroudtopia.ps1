@@ -49,13 +49,12 @@ Copy-Item templates/guardian.example.json "$stage/guardian.json"
 Copy-Item templates/shroudtopia.example.json "$stage/shroudtopia.json"
 Copy-Item templates/PACKAGE-README.txt "$stage/GUARDIAN-INSTALL.txt"
 Copy-Item LICENSE "$stage/licenses/Guardian-LICENSE.txt"
-Copy-Item dependencies/native/THIRD_PARTY_NOTICES.txt "$stage/licenses/Native-hardcore-NOTICES.txt"
 Copy-Item dependencies/shroudtopia/LICENSE.txt "$stage/licenses/Shroudtopia-LICENSE.txt"
 Copy-Item dependencies/shroudtopia/README.md "$stage/licenses/shroudtopia-README.md"
 $allowedFiles = @(
     'mods/guardian.dll', 'shroudtopia.dll', 'winmm.dll',
     'guardian.json', 'shroudtopia.json', 'GUARDIAN-INSTALL.txt',
-    'licenses/Guardian-LICENSE.txt', 'licenses/Shroudtopia-LICENSE.txt', 'licenses/Native-hardcore-NOTICES.txt',
+    'licenses/Guardian-LICENSE.txt', 'licenses/Shroudtopia-LICENSE.txt',
     'licenses/shroudtopia-README.md'
 )
 if ($package -eq 'full') {

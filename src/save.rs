@@ -374,36 +374,6 @@ pub(crate) fn personagem_inicial(a: &[u8]) -> Result<(Vec<u8>, Vec<u8>), String>
     Ok((novo, include_bytes!("../templates/initial-character/K.bin").to_vec()))
 }
 
-/// Hardcore uses the fresh character model with *all* equipment removed.
-/// Knowledge bytes/state belong to a separate block and must not be replaced.
-pub(crate) fn personagem_hardcore(a: &[u8], k: &[u8], estado_k: u8) -> Result<(Vec<u8>, Vec<u8>, u8), String> {
-    if k.len() % 8 != 0 { return Err("Unreadable hardcore knowledge block".into()); }
-    let (fresh, _) = personagem_inicial(a)?;
-    let mut body = descompactar(&fresh)?;
-    let data = catalogo()?;
-    let model = ler_personagem(&body, data)?;
-    let equipment = model["equipment"].as_array().ok_or("Missing fresh equipment")?;
-    if equipment.len() != 1 || model["layout"] != "compact" {
-        return Err("Unexpected fresh-character equipment layout".into());
-    }
-    let candidates: Vec<_> = (4..body.len().saturating_sub(7)).filter_map(|start| {
-        let (item, end) = ler_item(&body, start, data)?;
-        (item == equipment[0] && u32_em(&body, start - 4) == model["equipMask"].as_u64().map(|n| n as u32))
-            .then_some((start, end))
-    }).collect();
-    let [(start, end)] = candidates.as_slice() else { return Err("Ambiguous fresh equipment boundary".into()); };
-    body[start - 4..*start].fill(0);
-    body.drain(*start..*end);
-    let result = ler_personagem(&body, data)?;
-    if result["level"] != 1 || result["xp"] != 0 || ["skills", "equipment", "main", "extra"].iter()
-        .any(|key| result[*key].as_array().is_none_or(|items| !items.is_empty())) {
-        return Err("Hardcore reset validation failed".into());
-    }
-    let mut reset = fresh[..14].to_vec();
-    reset.extend_from_slice(&body);
-    Ok((reset, k.to_vec(), estado_k))
-}
-
 struct Captura {
     sid: u64,
     handle: u32,
@@ -494,25 +464,6 @@ pub fn capturar(sid: u64, handle: u32, a: &[u8], k: Option<&[u8]>, estado: u8, o
 #[cfg(test)]
 mod testes {
     use super::*;
-    #[test]
-    fn hardcore_clears_all_items_and_progress_but_preserves_exact_knowledge() {
-        for case in fixtures().into_iter().filter(|case| !case["expected"].is_null()) {
-            let original = bytes(&case);
-            let knowledge = [77u32, 100u32, 4u32, 9u32].into_iter().flat_map(u32::to_le_bytes).collect::<Vec<_>>();
-            let (a, k, state) = personagem_hardcore(&original, &knowledge, 2).unwrap();
-            assert_eq!(k, knowledge);
-            assert_eq!(state, 2);
-            let parsed = analisar(&a, Some(&k), state);
-            assert_eq!(parsed["character"]["level"], 1);
-            assert_eq!(parsed["character"]["xp"], 0);
-            for field in ["skills", "equipment", "main", "extra"] {
-                assert!(parsed["character"][field].as_array().unwrap().is_empty());
-            }
-            assert_eq!(&descompactar(&a).unwrap()[..0x3a], &descompactar(&original).unwrap()[..0x3a]);
-        }
-        assert!(personagem_hardcore(&[0; 20], &[], 1).is_err());
-        assert!(personagem_hardcore(include_bytes!("../templates/initial-character/A.bin"), &[1], 1).is_err());
-    }
 
     #[test]
     fn reinicia_personagem_externo_preservando_apenas_aparencia() {

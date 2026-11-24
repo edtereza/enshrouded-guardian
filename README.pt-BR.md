@@ -54,7 +54,6 @@ mantém a própria cópia do que gravou por último de cada jogador — e essa c
 
 | | |
 |---|---|
-| 💀 **Hardcore opcional** | após morrer, transfere os equipamentos para a lápide e renasce no nível 1, sem XP, itens ou skills, mantendo conhecimento e voltando ao ponto inicial sem desconexão; desativado por padrão |
 | 🛡️ **Servidor manda** | na entrada, compara o personagem que chegou com a última cópia do servidor e, se divergirem, devolve a cópia do servidor |
 | 🎒 **Nada vem de fora** | equipamento, nível, árvore de habilidades, inventário, descobertas e receitas valem o que o servidor viu |
 | 🔍 **Prova de tudo** | guarda o save recusado **e** a cópia de referência daquele instante, para comparar sem conclusão errada |
@@ -62,42 +61,6 @@ mantém a própria cópia do que gravou por último de cada jogador — e essa c
 | ✅ **Troca conferida** | depois de escrever, relê e compara; se não pegou, registra a falha em vez de fingir |
 | 🔧 **Sobrevive a atualizações** | ganchos achados por padrão de bytes, não por endereço fixo |
 | 🧩 **Combina com o Save Editor** | edite a cópia de um jogador, expulse ele, e ele volta com a sua versão |
-
-## Modo hardcore (3.2.0)
-
-O modo hardcore aplica uma penalidade de progressão a cada morte. O reset ocorre quando o personagem renasce, sem expulsar ou desconectar o jogador.
-
-### Como ativar ou desativar
-
-Adicione `"hardcore": true` no nível principal do `guardian.json` existente, ao lado do executável do servidor dedicado, mantendo as outras configurações. O padrão é `false`. Para desativar, altere novamente para `false`. Reinicie o servidor após mudar essa configuração.
-
-O backend nativo está incorporado ao Guardian 4.1.0 e funciona sem depender de outros mods. Use a versão Shroudtopia e mantenha bootDelay=0 para registrar o programa antes da inicialização do mundo. Não exige alteração no cliente nem runtime EMF.
-
-### O que acontece após uma morte
-
-1. O backend nativo identifica a morte pelo hash da conta, e o Guardian verifica o SteamID e a conexão atual. Nome do jogador e proximidade nunca autorizam um reset.
-2. Antes de alterar o personagem, a thread de backups do Guardian preserva a última referência do servidor e registra o reset pendente.
-3. Quando o personagem renasce e está pronto para jogar, o backend nativo aplica o reset:
-
-| Dado do personagem | Resultado |
-| --- | --- |
-| Nível | Retorna ao nível 1 |
-| XP e XP pendente | Zerados |
-| Itens equipados | Transferidos à lápide nativa antes do reset, preservando as entidades dos itens |
-| Restante do inventário do personagem | Esvaziado após a transferência dos equipamentos |
-| Skills desbloqueadas | Removidas, incluindo os efeitos de skills verificados |
-| Conhecimento | Preservado |
-| Posição | Teleporte ao ponto inicial `StartLocation` do mundo |
-
-A transferência usa uma transação nativa e a lápide vinculada por uma movimentação de inventário confirmada pelo próprio jogo a partir daquele jogador morto. Nome e proximidade não autorizam esse vínculo. Se não houver lápide verificada ou espaço suficiente, os equipamentos são mantidos e o reset aguarda. O Guardian não cria uma lápide substituta quando o jogo não cria nenhuma.
-
-A regra também vale para administradores. Baús compartilhados da base não são esvaziados. O Guardian verifica o reset e o teleporte nativos e conclui a operação após a próxima gravação bem-sucedida do personagem. O reset por morte não usa a sequência de desconexão da primeira entrada com personagem de outro mundo.
-
-### Backups e resets interrompidos
-
-Os backups ficam em `guardian/<SteamID64>/hardcore/history/<token>/`. O arquivo `guardian/<SteamID64>/hardcore-pending.json` registra um reset ainda não concluído. Operações interrompidas permanecem pendentes e são reaplicadas na reconexão usando a referência do personagem no servidor, preservando seu conhecimento.
-
-O backend aceita somente o executável dedicado verificado (timestamp PE `6aeb143e`, tamanho da imagem `0x1dde000`). Todos os patterns de bytes e RVAs necessários são conferidos antes da instalação dos hooks. Falhas na verificação de identidade, backup, layout dos componentes ou ponto inicial impedem a conclusão do reset afetado; são registradas em log e não solicitam kick automático. Se o backend não inicializar, o reset por morte durante a sessão fica indisponível.
 
 ## 🚀 Instalação
 
@@ -139,32 +102,6 @@ aparecer `Não consegui instalar os ganchos neste build do servidor`, dê a ele 
 Medido no servidor dedicado do 1.0. Host fora da lista? Ponha a DLL, suba o servidor e veja se
 o arquivo continua lá.
 
-## Configuração
-
-Crie `guardian.json` ao lado de `enshrouded_server.exe`. Configuração completa com os valores padrão:
-
-~~~json
-{
-  "mode": "enforce",
-  "hardcore": false,
-  "whitelist": {
-    "enabled": false,
-    "players": []
-  },
-  "admins": []
-}
-~~~
-
-| Campo | Funcionamento |
-| --- | --- |
-| `mode` | `enforce` aplica a referência do servidor e o reset inicial; `observe` apenas registra divergências comuns. |
-| `hardcore` | `false` por padrão. Com `true`, reseta no renascimento após morte confirmada, preservando conhecimento. Também vale para administradores usando o backend nativo integrado. |
-| `whitelist.enabled` | Com `true`, permite somente as contas de `players`, inclusive administradores e no modo observar. |
-| `whitelist.players` | Lista de SteamID64 completos como textos. Desativar a whitelist não adiciona conexões à lista. |
-| `admins` | Lista de SteamID64 cujo personagem recebido substitui a referência, sem reset de primeira entrada. Não concede permissões nativas de administrador do jogo nem isenção do hardcore. |
-
-As listas são relidas a cada entrada. Alterações em `mode` ou `hardcore` exigem reinício. Uma configuração de acesso inválida recusa novas entradas e registra o motivo.
-
 ### 🎚️ Escolhendo o modo
 
 O guardião tem dois modos, escolhidos por um arquivo `guardian.json` na raiz do servidor, ao lado do
@@ -179,6 +116,7 @@ Para trocar: **pare** o servidor, edite ou crie o `guardian.json` e **suba** de 
 O `guardian/guardian.log` mostra qual modo está ativo (`Mode: ENFORCE` ou `Mode: OBSERVE`).
 
 Quando o Steam ID ainda não tem um personagem guardado, o modo aplicar reinicia o personagem em **nível 1 e 0 XP**, sem habilidades compradas nem itens nos inventários e com apenas a calça inicial. A aparência é preservada. Antes da troca, A.bin, K.bin e os metadados recebidos são guardados em `guardian/<steam_id_64>/original-first-join/<data_hora>/`. Um personagem recém-criado que envia só a aparência segue a inicialização normal do jogo. Se a preparação, o backup ou a aplicação falhar, a entrada é recusada e o motivo vai ao log. O modo observar não reinicia personagens. A regra é por conta Steam, não por personagem individual.
+Os arquivos e logs gerados são sempre em inglês, independentemente da configuração antiga de idioma. Os anúncios de chat definidos em português são preservados.
 
 Um bom começo num servidor que já tem jogadores: rode em **observar** por algumas sessões, veja no `events.jsonl`
 quem seria afetado e depois troque para **aplicar**. Há um arquivo de exemplo em
@@ -260,14 +198,18 @@ registradas. Isso não adiciona jogadores à whitelist nem à lista de administr
 O nome é o da conta na conexão; não é o nome do personagem. A leitura usa o gancho
 de conexão disponível no build suportado; nomes ilegíveis são marcados como indisponíveis.
 
-Depois de reiniciar um personagem externo na primeira entrada, o Guardian agenda duas mensagens globais, com português e inglês na mesma linha, separados por `|`:
-
-- Aos 5 segundos: `[Guardião] {nome} acabou de vir de outro mundo. | [Guardian] {nome} has just arrived from another world.`
-- Após mais 1 segundo: `[Guardiao] Por isto, {nome} vai precisar sair e reconectar novamente. | [Guardian] Therefore, {nome} needs to leave and reconnect.`
-
-Após mais 5 segundos, solicita um kick nativo sem banimento, aguardando o envio completo do save reiniciado. A conexão é conferida em cada etapa; uma reconexão não herda o temporizador anterior. A sequência é cancelada se não puder terminar em 40 segundos. Um personagem já recém-criado não dispara essa sequência. O hardcore usa o reset no renascimento, sem desconexão.
-
-O anúncio de primeira entrada aos demais jogadores também é bilíngue: `Guardião: {nome} acabou de começar!!! | Guardian: {nome} has just started!!!`. Não há seletor de idioma nem flag adicional para as traduções.
+Depois de reiniciar um personagem externo na primeira entrada, o Guardião agenda
+duas mensagens globais de sistema pelo chat (sem exigir mod no cliente): aos
+5 segundos do login, `[Guardião] {nome do personagem} acabou de vir de outro mundo.`;
+1 segundo depois, `[Guardiao] Por isto, {nome do personagem} vai precisar sair e reconectar novamente.`
+O nome é consultado na tabela de nomes de personagens do jogo; se ainda não
+estiver disponível, aparece `O personagem`, sem confundir com o nome Steam.
+Após mais 5 segundos solicita um kick nativo, sem banimento. A conexão é conferida
+em cada etapa e uma reconexão não herda o temporizador antigo. O kick aguarda o
+envio completo do save reiniciado; a sequência é cancelada se não puder terminar
+em 40 segundos. A primeira entrada de um personagem já recém-criado não dispara
+essa sequência. Os ganchos são habilitados apenas no build confirmado, com o
+resultado e cada etapa registrados em `guardian/guardian.log`.
 
 O leitor de saves também gera `guardian/<steam_id_64>/server_save.html`
 ao persistir um save do servidor e ao exportar as cópias em disco na inicialização.
@@ -341,7 +283,7 @@ de agora mistura "o que o jogador trouxe" com "o que ele jogou depois".
 - **Não é anti-cheat geral.** O que o jogador fizer na sessão é mantido — inclusive o que um trainer fizer enquanto
   ele está conectado.
 - **Não toca no mundo:** construções, baús e tudo fora dos blocos de personagem e de conhecimento ficam como estão.
-- **O único acesso à rede é a consulta de versão:** uma consulta ao GitHub ao ligar e a cada 24 h. A verificação é obrigatória e somente informativa: não baixa nem instala atualizações nem envia saves do servidor; todo o resto são arquivos na pasta do servidor.
+- **O único acesso à rede é a consulta de versão:** uma pergunta ao GitHub ao ligar e a cada 24 h (desliga com `"checkUpdates": false`). Nunca baixa nada nem envia nada sobre o seu servidor; todo o resto são arquivos na pasta do servidor.
 - **Depende das entranhas do servidor.** Se uma atualização mover os padrões, os ganchos não se instalam e a DLL
   sai do caminho.
 
@@ -430,4 +372,5 @@ CSS, JavaScript, catálogos e imagens ficam em guardian/assets/<versão>/ e são
 gerados uma vez por versão na thread de saves. O HTML mantém os dados do
 personagem e continua estático, abrindo localmente sem servidor web. Ao copiar
 fichas, leve também assets/, preservando sua posição ao lado das pastas SteamID.
+O Live Map 1.9.0 serve esses mesmos arquivos mantendo a proteção por chave.
 Versões anteriores dos assets não são removidas, para preservar fichas antigas.
